@@ -1,6 +1,13 @@
 import nodemailer from 'nodemailer';
-import type { Order, CartItem } from '@/types';
+import type { Order } from '@/types';
 import { formatCurrency } from './utils';
+
+type OrderEmailItem = {
+  name: string;
+  price: number;
+  quantity: number;
+  weightGrams: number;
+};
 
 // Helper to safely get env vars
 const getEnv = (key: string) => process.env[key] || '';
@@ -32,7 +39,7 @@ function isConfigured() {
 export async function sendCustomerOrderEmail(
   order: Order,
   customer: { name: string; email: string },
-  items: CartItem[]
+  items: OrderEmailItem[]
 ) {
   if (!isConfigured()) {
     console.warn('⚠️ [Mail] No SMTP config found. Skipping customer email for order:', order.id);

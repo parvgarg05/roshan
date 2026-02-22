@@ -9,13 +9,15 @@ export const metadata: Metadata = {
 };
 
 interface SuccessPageProps {
-    searchParams: { orderId?: string };
+    searchParams: Promise<{ orderId?: string | string[] }>;
 }
 
 const ESTIMATED_HOURS = 6;
 
-export default function SuccessPage({ searchParams }: SuccessPageProps) {
-    const orderId = searchParams.orderId ?? 'N/A';
+export default async function SuccessPage({ searchParams }: SuccessPageProps) {
+    const resolvedSearchParams = await searchParams;
+    const orderIdParam = resolvedSearchParams.orderId;
+    const orderId = Array.isArray(orderIdParam) ? orderIdParam[0] : (orderIdParam ?? 'N/A');
     const shortId = orderId.length > 8 ? `…${orderId.slice(-8)}` : orderId;
 
     const now = new Date();

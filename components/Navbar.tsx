@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { usePathname, useSearchParams } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { ShoppingCart, Menu, X, Phone, Search } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import CartDrawer from '@/components/CartDrawer';
@@ -20,7 +20,7 @@ const NAV_LINKS = [
 export default function Navbar() {
     const { totalItems } = useCart();
     const pathname = usePathname();
-    const searchParams = useSearchParams();
+    const [currentSearchParams, setCurrentSearchParams] = useState<URLSearchParams | null>(null);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isCartOpen, setIsCartOpen] = useState(false);
 
@@ -31,13 +31,13 @@ export default function Navbar() {
 
         if (!queryString) {
             if (path === '/items') {
-                return !searchParams.get('category');
+                return !currentSearchParams?.get('category');
             }
             return true;
         }
 
         const linkParams = new URLSearchParams(queryString);
-        return Array.from(linkParams.entries()).every(([key, value]) => searchParams.get(key) === value);
+        return Array.from(linkParams.entries()).every(([key, value]) => currentSearchParams?.get(key) === value);
     };
 
     // Lock body scroll when mobile menu open
@@ -45,6 +45,10 @@ export default function Navbar() {
         document.body.style.overflow = isMenuOpen ? 'hidden' : '';
         return () => { document.body.style.overflow = ''; };
     }, [isMenuOpen]);
+
+    useEffect(() => {
+        setCurrentSearchParams(new URLSearchParams(window.location.search));
+    }, [pathname]);
 
     return (
         <>
