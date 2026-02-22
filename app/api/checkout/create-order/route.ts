@@ -4,6 +4,9 @@ import { getDeliveryCharge } from '@/lib/utils';
 import { getRazorpay } from '@/lib/razorpay';
 import { prisma } from '@/lib/prisma';
 
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
 export async function POST(req: NextRequest) {
     try {
         // 1. Parse & validate request body
