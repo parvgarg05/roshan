@@ -1,0 +1,154 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { CreateOrderRequestSchema } from '@/lib/validations/checkout';
+import { getDeliveryCharge } from '@/lib/utils';
+import { getRazorpay } from '@/lib/razorpay';
+import { prisma } from '@/lib/prisma';
+
+export async function POST(req: NextRequest) {
+    try {
+        // 1. Parse & validate request body
+        const body = await req.json();
+        const parsed = CreateOrderRequestSchema.safeParse(body);
+
+        if (!parsed.success) {
+            return NextResponse.json(
+                { error: 'Invalid request', details: parsed.error.flatten() },
+                { status: 400 }
+            );
+        }
+
+        const { customer, items } = parsed.data;
+
+        // 2. Server-side price calculation — NEVER trust client prices
+        let subtotal = 0;
+        let cgstTotal = 0;
+        let sgstTotal = 0;
+
+        const resolvedItems: Array<{
+            productId: string;
+            name: string;
+            price: number;
+            quantity: number;
+            weightGrams: number;
+            gstRate: number;
+            cgstPaise: number;
+            sgstPaise: number;
+        }> = [];
+
+        for (const { id, quantity } of items) {
+            const product = await prisma.product.findUnique({
+                where: { id },
+                include: { category: { select: { gstRate: true } } } as any
+            });
+            if (!product || !product.isAvailable) {
+                return NextResponse.json(
+                    { error: `Product "${id}" not found or unavailable` },
+                    { status: 400 }
+                );
+            }
+
+            const basePrice = product.price; // in Rupees
+            const gstRate = (product as any).category.gstRate as number;
+            const itemBaseTotalRupees = basePrice * quantity;
+
+            // Calculate total GST in Paise (1 Rupee = 100 Paise)
+            // itemGstTotalPaise = (Rupees * Rate / 100) * 100 = Rupees * Rate
+            const itemGstTotalPaise = itemBaseTotalRupees * gstRate;
+
+            // Split into CGST and SGST (ensuring the sum is always itemGstTotalPaise)
+            const cgstPaise = Math.floor(itemGstTotalPaise / 2);
+            const sgstPaise = itemGstTotalPaise - cgstPaise;
+
+            subtotal += itemBaseTotalRupees;
+            cgstTotal += cgstPaise / 100;
+            sgstTotal += sgstPaise / 100;
+
+            resolvedItems.push({
+                productId: product.id,
+                name: product.name,
+                price: basePrice, // Store base price in Rupees as per schema
+                quantity,
+                weightGrams: product.weightGrams,
+                gstRate,
+                cgstPaise,
+                sgstPaise,
+            });
+        }
+
+        const deliveryCharge = getDeliveryCharge(subtotal);
+        const grandTotal = subtotal + cgstTotal + sgstTotal + deliveryCharge;
+
+        // Razorpay uses paise (100 paise = ₹1)
+        const subtotalPaise = Math.round(subtotal * 100);
+        const cgstTotalPaise = Math.round(cgstTotal * 100);
+        const sgstTotalPaise = Math.round(sgstTotal * 100);
+        const deliveryPaise = Math.round(deliveryCharge * 100);
+        const totalPaise = Math.round(grandTotal * 100);
+
+        // 3. Create Razorpay order
+        const razorpay = getRazorpay();
+        const rzpOrder = await razorpay.orders.create({
+            amount: totalPaise,
+            currency: 'INR',
+            receipt: `rl_${Date.now()}`,
+            notes: {
+                customer_name: customer.name,
+                customer_phone: customer.phone,
+                customer_email: customer.email,
+            },
+        });
+
+        // 4. Upsert Customer + create Order in DB
+        const dbCustomer = await prisma.customer.upsert({
+            where: { email_phone: { email: customer.email, phone: customer.phone } } as any,
+            update: { name: customer.name, phone: customer.phone },
+            create: {
+                name: customer.name,
+                phone: customer.phone,
+                email: customer.email,
+            },
+        });
+
+        const dbOrder = await prisma.order.create({
+            data: {
+                razorpayOrderId: rzpOrder.id,
+                status: 'PENDING',
+                subtotalPaise,
+                cgstTotalPaise,
+                sgstTotalPaise,
+                deliveryPaise,
+                totalPaise,
+                addressLine: customer.addressLine,
+                city: customer.city,
+                state: customer.state,
+                pincode: customer.pincode,
+                customerId: dbCustomer.id,
+                items: {
+                    create: resolvedItems,
+                },
+            } as any,
+        });
+
+        // 5. Return safe response (never return key_secret)
+        return NextResponse.json({
+            razorpayOrderId: rzpOrder.id,
+            amount: totalPaise,
+            currency: 'INR',
+            keyId: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+            internalOrderId: dbOrder.id,
+            subtotal,
+            cgstTotal,
+            sgstTotal,
+            deliveryCharge,
+            total: grandTotal,
+        });
+    } catch (err) {
+        console.error('[create-order]', err);
+
+        // If DB is not connected (no DATABASE_URL), surface a clear message
+        const message =
+            err instanceof Error ? err.message : 'Internal server error';
+
+        return NextResponse.json({ error: message }, { status: 500 });
+    }
+}
