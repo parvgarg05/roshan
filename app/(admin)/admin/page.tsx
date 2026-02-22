@@ -72,7 +72,7 @@ export default async function AdminDashboard() {
         <div className="p-6 md:p-10 max-w-6xl mx-auto space-y-8">
             <div>
                 <h1 className="font-display font-bold text-3xl text-maroon-900">Dashboard Overview</h1>
-                <p className="text-maroon-500 mt-1">Welcome back. Here's what's happening at the store today.</p>
+                <p className="text-maroon-500 mt-1">Welcome back. Here&apos;s what&apos;s happening at the store today.</p>
             </div>
 
             {/* Stats Grid */}

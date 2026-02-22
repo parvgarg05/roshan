@@ -16,7 +16,7 @@ export default async function AdminProductsPage() {
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
                     <h1 className="font-display font-bold text-3xl text-maroon-900">Products ({products.length})</h1>
-                    <p className="text-maroon-500 mt-1">Manage your catalogue. Toggling 'Today's Special' updates the homepage instantly.</p>
+                    <p className="text-maroon-500 mt-1">Manage your catalogue. Toggling &apos;Today&apos;s Special&apos; updates the homepage instantly.</p>
                 </div>
                 <Link
                     href="/admin/products/new"
@@ -37,7 +37,7 @@ export default async function AdminProductsPage() {
                             <th className="px-5 py-4 text-center">Actions</th>
                             <th className="px-5 py-4 text-center">Available</th>
                             <th className="px-5 py-4 text-center">Featured</th>
-                            <th className="px-5 py-4 text-center">Today's Special</th>
+                            <th className="px-5 py-4 text-center">Today&apos;s Special</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-cream-100">

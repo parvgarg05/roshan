@@ -140,7 +140,7 @@ export default function EditProductForm({
                         </label>
                         <label className="flex items-center gap-2 cursor-pointer">
                             <input type="checkbox" name="isTodaySpecial" value="true" defaultChecked={product.isTodaySpecial} className="w-4 h-4 text-saffron-600 rounded" />
-                            <span className="text-sm font-medium text-maroon-800">Today's Special</span>
+                            <span className="text-sm font-medium text-maroon-800">Today&apos;s Special</span>
                         </label>
                         <label className="flex items-center gap-2 cursor-pointer">
                             <input type="checkbox" name="isVeg" value="true" defaultChecked={product.isVeg} className="w-4 h-4 text-green-600 rounded" />

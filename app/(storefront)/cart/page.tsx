@@ -22,7 +22,7 @@ export default function CartPage() {
                         <ShoppingBag size={44} className="text-maroon-300" />
                     </div>
                     <h1 className="font-display font-bold text-2xl text-maroon-900 mb-2">Your cart is empty</h1>
-                    <p className="text-maroon-400 text-sm mb-7">Looks like you haven't added any sweets yet. Let's fix that!</p>
+                    <p className="text-maroon-400 text-sm mb-7">Looks like you haven&apos;t added any sweets yet. Let&apos;s fix that!</p>
                     <Link href="/items">
                         <Button variant="primary" size="lg" leftIcon={<ArrowLeft size={16} />}>
                             Browse Mithai

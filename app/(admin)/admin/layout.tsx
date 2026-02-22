@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { PackageSearch, LayoutDashboard, Settings, LogOut, Tags } from 'lucide-react';
+import { PackageSearch, LayoutDashboard, Tags } from 'lucide-react';
 import LogoutButton from './LogoutButton';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {

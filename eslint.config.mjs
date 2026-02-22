@@ -1,16 +1,16 @@
-import tsEslintPlugin from '@typescript-eslint/eslint-plugin';
-import tsEslintParser from '@typescript-eslint/parser';
+import { FlatCompat } from '@eslint/eslintrc';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const compat = new FlatCompat({ baseDirectory: __dirname });
 
 /** @type {import('eslint').Linter.Config[]} */
 const config = [
+    ...compat.extends('next/core-web-vitals', 'next/typescript'),
     {
         files: ['**/*.{ts,tsx}'],
-        languageOptions: {
-            parser: tsEslintParser,
-        },
-        plugins: {
-            '@typescript-eslint': tsEslintPlugin,
-        },
         rules: {
             '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
             '@typescript-eslint/no-explicit-any': 'warn',

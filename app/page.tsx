@@ -158,7 +158,7 @@ export default async function HomePage() {
                                 🌅 Limited Quantity
                             </p>
                             <h2 className="font-display font-bold text-3xl sm:text-4xl text-maroon-900">
-                                Today's Special
+                                Today&apos;s Special
                             </h2>
                             <p className="text-maroon-500 text-sm mt-1">Freshly made this morning — order before they run out</p>
                         </div>
