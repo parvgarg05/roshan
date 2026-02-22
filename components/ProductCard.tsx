@@ -1,7 +1,6 @@
 'use client';
 
 import Image from 'next/image';
-import Link from 'next/link';
 import { useState } from 'react';
 import { ShoppingCart, Star } from 'lucide-react';
 import clsx from 'clsx';
@@ -53,11 +52,8 @@ export default function ProductCard({ product, className }: ProductCardProps) {
             )}
         >
             {/* ── Image ── */}
-            <Link
-                href={`/items/${product.slug}`}
+            <div
                 className="relative w-full aspect-[4/3] overflow-hidden bg-cream-100 block"
-                tabIndex={-1}
-                aria-hidden
             >
                 <Image
                     src={product.image}
@@ -95,16 +91,16 @@ export default function ProductCard({ product, className }: ProductCardProps) {
                         </span>
                     )}
                 </div>
-            </Link>
+            </div>
 
             {/* ── Content ── */}
             <div className="flex flex-col flex-1 p-4 gap-2">
-                <Link href={`/items/${product.slug}`} className="group/title">
+                <div className="group/title">
                     <h3 className="font-display font-semibold text-maroon-900 text-base leading-snug line-clamp-1 group-hover/title:text-saffron-600 transition-colors duration-200">
                         {product.name}
                     </h3>
                     <p className="text-[11px] text-maroon-400 font-devanagari mt-0.5">{product.nameHindi}</p>
-                </Link>
+                </div>
 
                 <p className="text-xs text-maroon-500 leading-relaxed line-clamp-2 flex-1">
                     {product.description}
