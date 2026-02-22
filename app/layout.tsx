@@ -65,7 +65,7 @@ export default function RootLayout({
             <body className="min-h-screen bg-cream-100 flex flex-col">
                 <CartProvider>
                     <Navbar />
-                    <main className="flex-1 pt-16">{children}</main>
+                    <main className="flex-1">{children}</main>
                     <Footer />
                 </CartProvider>
             </body>
