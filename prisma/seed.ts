@@ -11,7 +11,7 @@ interface SeedCategory {
 }
 
 const CATEGORIES: SeedCategory[] = [
-    { id: 'cashew-sweets', label: 'Cashew Sweets', labelHindi: 'काजू मिठाई', emoji: '💎', description: 'Premium sweets made with fine cashews.', gstRate: 5 },
+    { id: 'cashew-sweets', label: 'Cashew Sweets', labelHindi: 'काजू मिठाई', emoji: '🥜', description: 'Premium sweets made with fine cashews.', gstRate: 5 },
     { id: 'ladoo', label: 'Ladoo', labelHindi: 'लड्डू', emoji: '🟡', description: 'Traditional round delights.', gstRate: 5 },
     { id: 'milk-sweets', label: 'Milk Sweets', labelHindi: 'दूध की मिठाई', emoji: '🥛', description: 'Rich fudge and milk-based desserts.', gstRate: 5 },
     { id: 'bengali-sweets', label: 'Bengali Sweets', labelHindi: 'बंगाली मिठाई', emoji: '⚪', description: 'Soft, spongy sweets soaked in syrup.', gstRate: 5 },
@@ -574,6 +574,29 @@ const PRODUCTS: any[] = [
         badge: null,
         badgeColor: null
     },
+    {
+        id: '24',
+        name: 'testing',
+        nameHindi: 'टेस्टिंग',
+        slug: 'testing',
+        description: 'Test product for free delivery eligibility.',
+        price: 1,
+        originalPrice: null,
+        categoryId: 'cashew-sweets',
+        image: '/images/products/kaju-katli.png',
+        rating: 5,
+        reviewCount: 0,
+        isVeg: true,
+        isAvailable: true,
+        isFeatured: false,
+        isTodaySpecial: false,
+        weightGrams: 100,
+        allergens: [],
+        ingredients: 'Sugar',
+        shelfLifeDays: 7,
+        badge: 'Free Delivery',
+        badgeColor: 'green'
+    },
 ];
 
 const prisma = new PrismaClient();
@@ -655,6 +678,25 @@ async function main() {
         });
     }
     console.log('✅ Products seeded.');
+
+    await (prisma as any).deliveryPricing.upsert({
+        where: { id: 1 },
+        update: {
+            freeDeliveryThreshold: 499,
+            reducedDeliveryThreshold: 299,
+            reducedDeliveryFee: 30,
+            baseDeliveryFee: 50,
+        },
+        create: {
+            id: 1,
+            freeDeliveryThreshold: 499,
+            reducedDeliveryThreshold: 299,
+            reducedDeliveryFee: 30,
+            baseDeliveryFee: 50,
+        },
+    });
+
+    console.log('✅ Delivery pricing seeded.');
 
     console.log('🚀 Seeding finished successfully!');
 }

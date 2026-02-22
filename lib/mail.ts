@@ -23,8 +23,8 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const FROM_EMAIL = getEnv('FROM_EMAIL') || 'orders@roshanlalsons.com';
-const ADMIN_EMAIL = getEnv('ADMIN_EMAIL') || 'admin@roshanlalsons.com';
+const FROM_EMAIL = getEnv('FROM_EMAIL') || 'info@roshanlaljisweets.com';
+const ADMIN_EMAIL = getEnv('ADMIN_EMAIL') || 'info@roshanlaljisweets.com';
 
 /**
  * Validates if SMTP credentials exist before attempting to send.
@@ -70,7 +70,7 @@ export async function sendCustomerOrderEmail(
       
       <div style="padding: 30px; background-color: #fffaf0; border: 1px solid #fcebb6; border-top: none; border-radius: 0 0 12px 12px;">
         <p>Dear <strong>${customer.name}</strong>,</p>
-        <p>Thank you for ordering from Roshanlal & Sons. We are preparing your fresh mithai now!</p>
+        <p>Thank you for ordering from L.Roshanlal Ji Sweets. We are preparing your fresh mithai now!</p>
         
         <div style="background-color: white; border-radius: 8px; padding: 20px; margin: 25px 0; border: 1px solid #fcebb6;">
           <h3 style="margin-top: 0; color: #9f1239; border-bottom: 2px solid #fcebb6; padding-bottom: 10px;">Order Details (#${order.id.slice(-8).toUpperCase()})</h3>
@@ -109,7 +109,7 @@ export async function sendCustomerOrderEmail(
         </p>
         
         <p style="text-align: center; margin-top: 40px; font-size: 0.9em; color: #888;">
-          Questions? Reply to this email or call us at +91 98765 43210.
+          Questions? Reply to this email or call us at +91 70555 13961.
         </p>
       </div>
     </div>
@@ -117,9 +117,9 @@ export async function sendCustomerOrderEmail(
 
   try {
     const info = await transporter.sendMail({
-      from: `"Roshanlal & Sons" <${FROM_EMAIL}>`,
+      from: `"L.Roshanlal Ji Sweets" <${FROM_EMAIL}>`,
       to: customer.email,
-      subject: `Order Confirmation - Roshanlal & Sons #${order.id.slice(-8).toUpperCase()}`,
+      subject: `Order Confirmation - L.Roshanlal Ji Sweets #${order.id.slice(-8).toUpperCase()}`,
       html,
     });
     console.log('✅ [Mail] Confirmation sent to', customer.email, info.messageId);
@@ -150,7 +150,7 @@ export async function sendAdminAlertEmail(order: Order, customer: { name: string
 
   try {
     const info = await transporter.sendMail({
-      from: `"Roshanlal Store" <${FROM_EMAIL}>`,
+      from: `"L.Roshanlal Ji Sweets" <${FROM_EMAIL}>`,
       to: ADMIN_EMAIL,
       subject: `🚨 New Order Received - ₹${order.totalPaise / 100}`,
       html,

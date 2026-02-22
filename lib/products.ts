@@ -111,7 +111,7 @@ export function paginateProducts(
 import type { CategoryMeta } from '@/types';
 export const CATEGORIES: CategoryMeta[] = [
     { id: 'all', label: 'All Items', labelHindi: 'सभी मिठाई', emoji: '🍬', description: 'Browse our complete collection', gstRate: 5 },
-    { id: 'cashew-sweets', label: 'Cashew Sweets', labelHindi: 'काजू मिठाई', emoji: '💎', description: 'Premium sweets made with fine cashews.', gstRate: 5 },
+    { id: 'cashew-sweets', label: 'Cashew Sweets', labelHindi: 'काजू मिठाई', emoji: '🥜', description: 'Premium sweets made with fine cashews.', gstRate: 5 },
     { id: 'ladoo', label: 'Ladoo', labelHindi: 'लड्डू', emoji: '🟡', description: 'Traditional round delights.', gstRate: 5 },
     { id: 'milk-sweets', label: 'Milk Sweets', labelHindi: 'दूध की मिठाई', emoji: '🥛', description: 'Rich fudge and milk-based desserts.', gstRate: 5 },
     { id: 'bengali-sweets', label: 'Bengali Sweets', labelHindi: 'बंगाली मिठाई', emoji: '⚪', description: 'Soft, spongy sweets soaked in syrup.', gstRate: 5 },
@@ -120,3 +120,28 @@ export const CATEGORIES: CategoryMeta[] = [
     { id: 'dry-fruits-ghee', label: 'Dry Fruits & Ghee', labelHindi: 'सूखे मेवे', emoji: '🥜', description: 'Flaky sweets rich in ghee and nuts.', gstRate: 5 },
     { id: 'cookies-bakery', label: 'Cookies & Bakery', labelHindi: 'कुकीज़ और बेकरी', emoji: '🍪', description: 'Fresh baked biscuits and rusks.', gstRate: 18 },
 ];
+
+/**
+ * Get categories from database (includes 'all' category)
+ */
+export async function getCategories(): Promise<CategoryMeta[]> {
+    try {
+        const dbCategories = await prisma.category.findMany({
+            orderBy: { label: 'asc' },
+        });
+        
+        const allCategory: CategoryMeta = { 
+            id: 'all', 
+            label: 'All Items', 
+            labelHindi: 'सभी मिठाई', 
+            emoji: '🍬', 
+            description: 'Browse our complete collection', 
+            gstRate: 5 
+        };
+        
+        return [allCategory, ...dbCategories as CategoryMeta[]];
+    } catch (error) {
+        console.error('Failed to fetch categories from DB, falling back to static:', error);
+        return CATEGORIES;
+    }
+}

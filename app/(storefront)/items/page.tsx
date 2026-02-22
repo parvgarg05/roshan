@@ -1,4 +1,4 @@
-import { getProductsByCategory } from '@/lib/products';
+import { getProductsByCategory, getCategories } from '@/lib/products';
 import ItemsClient from './ItemsClient';
 import type { ProductCategory } from '@/types';
 
@@ -24,8 +24,9 @@ export default async function ItemsPage({
         ? (category as ProductCategory)
         : 'all';
 
-    // Fetch all products on the server
+    // Fetch all products and categories on the server
     const initialProducts = await getProductsByCategory('all');
+    const categories = await getCategories();
 
-    return <ItemsClient initialProducts={initialProducts} initialCategory={initialCategory} />;
+    return <ItemsClient initialProducts={initialProducts} initialCategory={initialCategory} categories={categories} />;
 }

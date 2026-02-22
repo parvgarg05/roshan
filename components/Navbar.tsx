@@ -61,7 +61,7 @@ export default function Navbar() {
                             <div className="relative w-14 h-14 md:w-16 md:h-16">
                                 <Image
                                     src="/logo.png"
-                                    alt="Roshan Lal"
+                                    alt="L.Roshanlal Ji Sweets"
                                     fill
                                     className="object-contain"
                                     priority
@@ -69,10 +69,10 @@ export default function Navbar() {
                             </div>
                             <div className="flex flex-col leading-tight hidden sm:flex">
                                 <span className="font-display font-bold text-maroon-950 text-base leading-5 group-hover:text-saffron-600 transition-colors duration-200">
-                                    Roshanlal
+                                    L.Roshanlal Ji
                                 </span>
                                 <span className="text-[10px] font-sans text-gold-600 tracking-wider uppercase font-medium">
-                                    &amp; Sons
+                                    Sweets
                                 </span>
                             </div>
                         </Link>
@@ -108,7 +108,7 @@ export default function Navbar() {
 
                             {/* Call (mobile) */}
                             <a
-                                href="tel:+919876543210"
+                                href="tel:+917055513961"
                                 aria-label="Call us"
                                 className="flex md:hidden items-center justify-center w-10 h-10 rounded-xl text-maroon-700 hover:text-saffron-600 hover:bg-saffron-50 transition-all duration-200 touch-target"
                             >
@@ -209,7 +209,7 @@ export default function Navbar() {
                         Order Now
                     </Link>
                     <a
-                        href="tel:+919876543210"
+                        href="tel:+917055513961"
                         className="flex items-center justify-center gap-2 w-full py-3 border border-maroon-200 text-maroon-800 font-medium rounded-2xl hover:bg-maroon-50 transition-colors duration-200 touch-target"
                     >
                         <Phone size={16} />

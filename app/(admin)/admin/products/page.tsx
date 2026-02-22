@@ -4,6 +4,7 @@ import { formatCurrency } from '@/lib/utils';
 import ProductToggle from './ProductToggle';
 import { Pencil, Plus } from 'lucide-react';
 import Link from 'next/link';
+import DeleteProductButton from './DeleteProductButton';
 
 export default async function AdminProductsPage() {
     const products = await prisma.product.findMany({
@@ -67,13 +68,16 @@ export default async function AdminProductsPage() {
                                     <div className="text-maroon-400 text-xs">/{product.weightGrams}g</div>
                                 </td>
                                 <td className="px-5 py-3 text-center">
-                                    <Link
-                                        href={`/admin/products/${product.id}/edit`}
-                                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-cream-300 text-maroon-700 hover:bg-cream-50 transition-colors"
-                                    >
-                                        <Pencil size={14} />
-                                        Edit
-                                    </Link>
+                                    <div className="inline-flex items-center gap-2">
+                                        <Link
+                                            href={`/admin/products/${product.id}/edit`}
+                                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-cream-300 text-maroon-700 hover:bg-cream-50 transition-colors"
+                                        >
+                                            <Pencil size={14} />
+                                            Edit
+                                        </Link>
+                                        <DeleteProductButton id={product.id} name={product.name} />
+                                    </div>
                                 </td>
                                 <td className="px-5 py-3 text-center">
                                     <ProductToggle id={product.id} field="isAvailable" currentValue={product.isAvailable} />

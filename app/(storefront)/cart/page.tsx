@@ -6,12 +6,10 @@ import { Trash2, ShoppingBag, ArrowRight, Tag, ArrowLeft } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import QuantitySelector from '@/components/ui/QuantitySelector';
 import Button from '@/components/ui/Button';
-import { formatCurrency, getDeliveryCharge } from '@/lib/utils';
+import { formatCurrency } from '@/lib/utils';
 
 export default function CartPage() {
-    const { items, totalPrice, updateQuantity, removeItem, clearCart } = useCart();
-
-    const delivery = getDeliveryCharge(totalPrice);
+    const { items, totalPrice, deliveryConfig, deliveryCharge: delivery, updateQuantity, removeItem, clearCart } = useCart();
     const grandTotal = totalPrice + delivery;
 
     if (items.length === 0) {
@@ -122,7 +120,7 @@ export default function CartPage() {
                                     <Tag size={14} className="text-saffron-600 shrink-0 mt-0.5" />
                                     <p className="text-xs text-saffron-700 leading-relaxed">
                                         Add{' '}
-                                        <strong>{formatCurrency(499 - totalPrice)}</strong>{' '}
+                                        <strong>{formatCurrency(Math.max(deliveryConfig.freeDeliveryThreshold - totalPrice, 0))}</strong>{' '}
                                         more for <strong>FREE delivery</strong>!
                                     </p>
                                 </div>
@@ -170,7 +168,7 @@ export default function CartPage() {
                         <div className="card-base p-4 mt-3 hover:!-translate-y-0">
                             <p className="text-xs font-semibold text-maroon-700 mb-2">📦 Delivery Information</p>
                             <ul className="text-xs text-maroon-500 space-y-1 leading-relaxed">
-                                <li>• Free delivery on orders above ₹499</li>
+                                <li>• Free delivery on orders above {formatCurrency(deliveryConfig.freeDeliveryThreshold)}</li>
                                 <li>• Same-day delivery for orders before 2 PM</li>
                                 <li>• Delivered fresh in insulated packaging</li>
                                 <li>• Call us for bulk/wedding orders</li>

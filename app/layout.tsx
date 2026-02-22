@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Inter, Playfair_Display, Noto_Serif_Devanagari } from 'next/font/google';
 import './globals.css';
 import { CartProvider } from '@/context/CartContext';
@@ -30,25 +30,38 @@ const notoSerifDevanagari = Noto_Serif_Devanagari({
 /* ─── Metadata ──────────────────────────────────────────── */
 export const metadata: Metadata = {
     title: {
-        default: 'Roshanlal & Sons – Premium Indian Sweets | Nadrai Gate, UP',
-        template: '%s | Roshanlal & Sons',
+        default: 'L.Roshanlal Ji Sweets – Premium Indian Sweets | Nadrai Gate, UP',
+        template: '%s | L.Roshanlal Ji Sweets',
     },
     description:
-        'Order fresh, handcrafted Indian sweets and mithai online from Roshanlal & Sons – a trusted sweet shop at Circular Road, Malgodam Crossing Nadrai Gate, UP 207123. Delivering happiness since generations.',
+        'Order fresh, handcrafted Indian sweets and mithai online from L.Roshanlal Ji Sweets – a trusted sweet shop at Circular Road, Malgodam Crossing Nadrai Gate, UP 207123. Delivering happiness since generations.',
     keywords: [
-        'Indian sweets', 'mithai', 'online sweet shop UP', 'Roshanlal sweets',
+        'Indian sweets', 'mithai', 'online sweet shop UP', 'L.Roshanlal Ji sweets',
         'Nadrai Gate sweets', 'traditional Indian mithai', 'gulab jamun', 'barfi',
     ],
     openGraph: {
         type: 'website',
         locale: 'en_IN',
-        siteName: 'Roshanlal & Sons',
-        title: 'Roshanlal & Sons – Premium Indian Sweets',
+        siteName: 'L.Roshanlal Ji Sweets',
+        title: 'L.Roshanlal Ji Sweets – Premium Indian Sweets',
         description: 'Handcrafted Indian sweets delivered to your door.',
     },
     robots: { index: true, follow: true },
+    icons: {
+        icon: [
+            { url: '/logo-32.png', sizes: '32x32', type: 'image/png' },
+            { url: '/logo-64.png', sizes: '64x64', type: 'image/png' },
+            { url: '/logo-128.png', sizes: '128x128', type: 'image/png' },
+        ],
+        apple: { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    },
+};
+
+export const viewport: Viewport = {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 5,
     themeColor: '#f97316',
-    viewport: 'width=device-width, initial-scale=1, maximum-scale=5',
 };
 
 /* ─── Root Layout ───────────────────────────────────────── */

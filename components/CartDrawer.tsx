@@ -8,7 +8,7 @@ import clsx from 'clsx';
 import { useCart } from '@/context/CartContext';
 import QuantitySelector from '@/components/ui/QuantitySelector';
 import Button from '@/components/ui/Button';
-import { formatCurrency, getDeliveryCharge } from '@/lib/utils';
+import { formatCurrency } from '@/lib/utils';
 
 interface CartDrawerProps {
     isOpen: boolean;
@@ -16,8 +16,7 @@ interface CartDrawerProps {
 }
 
 export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
-    const { items, totalItems, totalPrice, cgstTotal, sgstTotal, updateQuantity, removeItem } = useCart();
-    const delivery = getDeliveryCharge(totalPrice);
+    const { items, totalItems, totalPrice, cgstTotal, sgstTotal, deliveryConfig, deliveryCharge: delivery, updateQuantity, removeItem } = useCart();
     const grandTotal = totalPrice + cgstTotal + sgstTotal + delivery;
 
     // Lock scroll
@@ -139,7 +138,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                                 <div className="flex items-center gap-2 p-3 rounded-xl bg-saffron-50 border border-saffron-100">
                                     <Tag size={14} className="text-saffron-600 shrink-0" />
                                     <p className="text-xs text-saffron-700">
-                                        Add <strong>{formatCurrency(499 - totalPrice)}</strong> more for FREE delivery!
+                                        Add <strong>{formatCurrency(Math.max(deliveryConfig.freeDeliveryThreshold - totalPrice, 0))}</strong> more for FREE delivery!
                                     </p>
                                 </div>
                             )}

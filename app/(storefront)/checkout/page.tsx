@@ -4,7 +4,7 @@ import CheckoutForm from '@/components/checkout/CheckoutForm';
 
 export const metadata: Metadata = {
     title: 'Checkout',
-    description: 'Complete your order of fresh Indian sweets from Roshanlal & Sons.',
+    description: 'Complete your order of fresh Indian sweets from L.Roshanlal Ji Sweets.',
     robots: { index: false, follow: false }, // Don't index checkout pages
 };
 

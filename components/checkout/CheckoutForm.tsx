@@ -12,7 +12,7 @@ import {
 import { useCart } from '@/context/CartContext';
 import Input from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
-import { formatCurrency, getDeliveryCharge } from '@/lib/utils';
+import { formatCurrency } from '@/lib/utils';
 
 /* ─── Razorpay types (CDN script – no @types/razorpay needed) ── */
 declare global {
@@ -29,7 +29,7 @@ interface RazorpayOptions {
     order_id: string;
     prefill: { name: string; email: string; contact: string };
     theme: { color: string };
-    modal: { backdropclose: boolean };
+    modal: { backdropclose: boolean; ondismiss?: () => void };
     handler: (response: RazorpayResponse) => void;
 }
 interface RazorpayResponse {
@@ -80,8 +80,7 @@ function FormField({
 /* ─── MAIN COMPONENT ─────────────────────────────────────────── */
 export default function CheckoutForm() {
     const router = useRouter();
-    const { items, totalPrice, cgstTotal, sgstTotal, clearCart } = useCart();
-    const delivery = getDeliveryCharge(totalPrice);
+    const { items, totalPrice, cgstTotal, sgstTotal, deliveryConfig, deliveryCharge: delivery, clearCart } = useCart();
     const grandTotal = totalPrice + cgstTotal + sgstTotal + delivery;
 
     const [apiError, setApiError] = useState<string | null>(null);
@@ -90,8 +89,7 @@ export default function CheckoutForm() {
     const {
         register,
         handleSubmit,
-        getValues,
-        formState: { errors, isValid },
+        formState: { errors },
     } = useForm<CheckoutFormValues>({
         resolver: zodResolver(CheckoutFormSchema),
         mode: 'onTouched',
@@ -144,7 +142,10 @@ export default function CheckoutForm() {
                         contact: data.phone,
                     },
                     theme: { color: '#f97316' },   // saffron
-                    modal: { backdropclose: false },
+                    modal: {
+                        backdropclose: false,
+                        ondismiss: () => reject(new Error('Payment cancelled by user.')),
+                    },
                     handler: async (response: RazorpayResponse) => {
                         try {
                             // Step 4: Verify signature on our server
@@ -367,7 +368,7 @@ export default function CheckoutForm() {
                     {/* Delivery note */}
                     <div className="mt-4 p-3 rounded-xl bg-gold-50 border border-gold-100 text-xs text-maroon-600 space-y-1">
                         <p className="font-semibold text-gold-700">📦 Delivery Info</p>
-                        <p>• Free delivery on orders above ₹499</p>
+                        <p>• Free delivery on orders above {formatCurrency(deliveryConfig.freeDeliveryThreshold)}</p>
                         <p>• Same-day delivery for orders before 2 PM</p>
                         <p>• Packed fresh in insulated packaging</p>
                     </div>

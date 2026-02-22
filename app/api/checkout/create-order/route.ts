@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { CreateOrderRequestSchema } from '@/lib/validations/checkout';
-import { getDeliveryCharge } from '@/lib/utils';
+import { calculateDeliveryCharge, getDeliveryPricingConfig } from '@/lib/delivery';
 import { getRazorpay } from '@/lib/razorpay';
 import { prisma } from '@/lib/prisma';
 
@@ -26,6 +26,7 @@ export async function POST(req: NextRequest) {
         let subtotal = 0;
         let cgstTotal = 0;
         let sgstTotal = 0;
+        let hasFreeDeliveryEligibleItem = false;
 
         const resolvedItems: Array<{
             productId: string;
@@ -54,6 +55,10 @@ export async function POST(req: NextRequest) {
             const gstRate = (product as any).category.gstRate as number;
             const itemBaseTotalRupees = basePrice * quantity;
 
+            if ((product.badge || '').toLowerCase() === 'free delivery') {
+                hasFreeDeliveryEligibleItem = true;
+            }
+
             // Calculate total GST in Paise (1 Rupee = 100 Paise)
             // itemGstTotalPaise = (Rupees * Rate / 100) * 100 = Rupees * Rate
             const itemGstTotalPaise = itemBaseTotalRupees * gstRate;
@@ -78,7 +83,8 @@ export async function POST(req: NextRequest) {
             });
         }
 
-        const deliveryCharge = getDeliveryCharge(subtotal);
+        const deliveryConfig = await getDeliveryPricingConfig();
+        const deliveryCharge = calculateDeliveryCharge(subtotal, hasFreeDeliveryEligibleItem, deliveryConfig);
         const grandTotal = subtotal + cgstTotal + sgstTotal + deliveryCharge;
 
         // Razorpay uses paise (100 paise = ₹1)
@@ -102,15 +108,23 @@ export async function POST(req: NextRequest) {
         });
 
         // 4. Upsert Customer + create Order in DB
-        const dbCustomer = await prisma.customer.upsert({
-            where: { email_phone: { email: customer.email, phone: customer.phone } } as any,
-            update: { name: customer.name, phone: customer.phone },
-            create: {
-                name: customer.name,
-                phone: customer.phone,
-                email: customer.email,
-            },
+        const existingCustomer = await prisma.customer.findFirst({
+            where: { phone: customer.phone },
+            orderBy: { createdAt: 'asc' },
         });
+
+        const dbCustomer = existingCustomer
+            ? await prisma.customer.update({
+                where: { id: existingCustomer.id },
+                data: { name: customer.name, email: customer.email },
+            })
+            : await prisma.customer.create({
+                data: {
+                    name: customer.name,
+                    phone: customer.phone,
+                    email: customer.email,
+                },
+            });
 
         const dbOrder = await prisma.order.create({
             data: {

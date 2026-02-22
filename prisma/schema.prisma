@@ -29,11 +29,23 @@ model Customer {
   email     String
   createdAt DateTime @default(now())
 
-  orders Order[]
+  orders  Order[]
+  ratings ProductRating[]
 
   @@unique([email, phone])
   @@index([email])
   @@index([phone])
+}
+
+model CustomerOtp {
+  id         String   @id @default(cuid())
+  phone      String
+  codeHash   String
+  expiresAt  DateTime
+  consumedAt DateTime?
+  createdAt  DateTime @default(now())
+
+  @@index([phone, createdAt])
 }
 
 model Order {
@@ -130,12 +142,27 @@ model Product {
   ingredients    String?
   shelfLifeDays  Int
   
+  ratings        ProductRating[]
+  
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
   
   @@index([categoryId])
   @@index([slug])
   @@index([isAvailable])
+}
+
+model ProductRating {
+  id         String   @id @default(cuid())
+  productId  String
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  customerId String?
+  customer   Customer? @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  rating     Int      // 1 to 5 stars
+  createdAt  DateTime @default(now())
+
+  @@index([productId])
+  @@index([customerId])
 }
 
 // ─── Admin Users ──────────────────────────────────────────────────────────
@@ -146,5 +173,14 @@ model AdminUser {
   password  String   // Hashed
   name      String
   createdAt DateTime @default(now())
+}
+
+model DeliveryPricing {
+  id                       Int      @id
+  freeDeliveryThreshold    Int      @default(499)
+  reducedDeliveryThreshold Int      @default(299)
+  reducedDeliveryFee       Int      @default(30)
+  baseDeliveryFee          Int      @default(50)
+  updatedAt                DateTime @updatedAt
 }
 

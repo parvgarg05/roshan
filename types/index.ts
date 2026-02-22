@@ -1,4 +1,4 @@
-// Shared TypeScript types for Roshanlal & Sons
+// Shared TypeScript types for L.Roshanlal Ji Sweets
 
 export interface Product {
     id: string;
@@ -53,6 +53,7 @@ export interface CartItem {
     image: string;
     weightGrams: number;
     gstRate: number;
+    isFreeDeliveryEligible?: boolean;
 }
 
 export interface PaginationMeta {

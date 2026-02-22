@@ -4,10 +4,10 @@ import Link from 'next/link';
 import { useRef } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import clsx from 'clsx';
-import { CATEGORIES } from '@/lib/products';
-import type { ProductCategory } from '@/types';
+import type { ProductCategory, CategoryMeta } from '@/types';
 
 interface CategoryCarouselProps {
+    categories: CategoryMeta[];
     activeCategory?: ProductCategory;
     onSelect?: (category: ProductCategory) => void;
     /** If true, categories link to /items?category=xxx instead of calling onSelect */
@@ -15,6 +15,7 @@ interface CategoryCarouselProps {
 }
 
 export default function CategoryCarousel({
+    categories,
     activeCategory = 'all',
     onSelect,
     asLinks = false,
@@ -45,7 +46,7 @@ export default function CategoryCarousel({
                 role="list"
                 aria-label="Product categories"
             >
-                {CATEGORIES.map((cat) => {
+                {categories.map((cat) => {
                     const isActive = activeCategory === cat.id;
                     const chipClass = clsx(
                         'shrink-0 flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium',

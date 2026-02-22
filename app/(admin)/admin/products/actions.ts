@@ -21,3 +21,20 @@ export async function toggleProductStatus(id: string, field: 'isAvailable' | 'is
         return { error: 'Failed to update product' };
     }
 }
+
+export async function deleteProduct(id: string) {
+    try {
+        await prisma.product.delete({
+            where: { id },
+        });
+
+        revalidatePath('/admin/products');
+        revalidatePath('/');
+        revalidatePath('/items');
+
+        return { success: true };
+    } catch (error) {
+        console.error('[deleteProduct]', error);
+        return { error: 'Failed to delete product' };
+    }
+}

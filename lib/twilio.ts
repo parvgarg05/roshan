@@ -49,13 +49,13 @@ export async function sendWhatsAppConfirmation(
 
     const message = `Namaste ${customer.name}! 🪔
 
-Thank you for your order from Roshanlal & Sons.
+Thank you for your order from L.Roshanlal Ji Sweets.
 Order ID: #${shortId}
 Total: ${totalStr}
 
 Your fresh mithai is being prepared and will be delivered shortly to ${order.city}.
 
-If you have questions, reply or call us at 9876543210.
+If you have questions, reply or call us at 7055513961.
 Have a sweet day! 🍬`;
 
     try {

@@ -4,12 +4,13 @@ import { ArrowRight, Clock, Star, Truck, Award, Phone } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import ProductCard from '@/components/ProductCard';
 import CategoryCarousel from '@/components/CategoryCarousel';
-import { getFeaturedProducts, getTodaySpecials, CATEGORIES } from '@/lib/products';
+import { getFeaturedProducts, getTodaySpecials, getCategories } from '@/lib/products';
 import { formatCurrency } from '@/lib/utils';
 
 export default async function HomePage() {
     const todaySpecials = await getTodaySpecials();
     const featuredProducts = await getFeaturedProducts();
+    const categories = await getCategories();
 
     const STATS = [
         { icon: Award, label: 'Years of Craft', value: '50+' },
@@ -190,11 +191,11 @@ export default async function HomePage() {
                             <h2 className="font-display font-bold text-2xl sm:text-3xl text-maroon-900">Our Sweet Families</h2>
                         </div>
                     </div>
-                    <CategoryCarousel asLinks activeCategory="all" />
+                    <CategoryCarousel categories={categories} asLinks activeCategory="all" />
 
                     {/* Category feature cards */}
                     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 mt-6">
-                        {CATEGORIES.filter((c) => c.id !== 'all').slice(0, 8).map((cat) => (
+                        {categories.filter((c) => c.id !== 'all').slice(0, 8).map((cat) => (
                             <Link
                                 key={cat.id}
                                 href={`/items?category=${cat.id}`}
@@ -255,14 +256,14 @@ export default async function HomePage() {
                             Delivered with <span className="text-gold-300">Care</span>
                         </h2>
                         <p className="text-cream-300 text-base leading-relaxed mb-7">
-                            Every sweet at Roshanlal &amp; Sons is crafted in small batches using traditional recipes.
+                            Every sweet at L.Roshanlal Ji Sweets is crafted in small batches using traditional recipes.
                             No artificial colours. No preservatives. Just pure ingredients and decades of expertise.
                         </p>
                         <div className="flex flex-wrap justify-center gap-3">
                             <Link href="/items">
                                 <Button variant="primary" size="lg">Shop Now</Button>
                             </Link>
-                            <a href="tel:+919876543210">
+                            <a href="tel:+917055513961">
                                 <Button
                                     variant="outline"
                                     size="lg"

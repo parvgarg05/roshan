@@ -19,7 +19,6 @@ const QUICK_LINKS = [
     { label: 'All Items', href: '/items' },
     { label: 'About Us', href: '/about' },
     { label: 'Cart', href: '/cart' },
-    { label: 'Track Order', href: '/orders' },
     { label: 'Contact Us', href: '/contact' },
 ];
 
@@ -49,14 +48,14 @@ export default function Footer() {
                             <div className="relative w-12 h-12 rounded-2xl overflow-hidden bg-white/10">
                                 <Image
                                     src="/logo.png"
-                                    alt="Roshan Lal"
+                                    alt="L.Roshanlal Ji Sweets"
                                     fill
                                     className="object-contain p-1"
                                 />
                             </div>
                             <div>
                                 <p className="font-display font-bold text-cream-100 text-xl leading-tight">
-                                    Roshanlal &amp; Sons
+                                    L.Roshanlal Ji Sweets
                                 </p>
                                 <p className="text-gold-400 text-xs tracking-widest uppercase font-medium">
                                     Premium Indian Sweets
@@ -127,14 +126,14 @@ export default function Footer() {
                             </li>
                             <li className="flex items-center gap-3 text-sm text-cream-300">
                                 <Phone size={16} className="text-gold-400 shrink-0" />
-                                <a href="tel:+919876543210" className="hover:text-gold-400 transition-colors duration-200">
-                                    +91 98765 43210
+                                <a href="tel:+917055513961" className="hover:text-gold-400 transition-colors duration-200">
+                                    +91 70555 13961
                                 </a>
                             </li>
                             <li className="flex items-center gap-3 text-sm text-cream-300">
                                 <Mail size={16} className="text-gold-400 shrink-0" />
-                                <a href="mailto:info@roshanlalandsons.in" className="hover:text-gold-400 transition-colors duration-200">
-                                    info@roshanlalandsons.in
+                                <a href="mailto:info@roshanlaljisweets.com" className="hover:text-gold-400 transition-colors duration-200">
+                                    info@roshanlaljisweets.com
                                 </a>
                             </li>
                             <li className="flex items-start gap-3 text-sm text-cream-300">
@@ -152,7 +151,7 @@ export default function Footer() {
                 {/* ── Google Maps Embed ── */}
                 <div className="mt-10 rounded-2xl overflow-hidden border border-white/10 shadow-warm-lg relative group">
                     <iframe
-                        title="Roshanlal & Sons Location"
+                        title="L.Roshanlal Ji Sweets Location"
                         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3532.6851427835!2d78.6533!3d27.8142!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1sRoshanlal%20%26%20Sons%20Kasganj!2sKasganj%2C%20Uttar%20Pradesh!5e0!3m2!1sen!2sin!4v1640000000000"
                         width="100%"
                         height="200"
@@ -174,7 +173,7 @@ export default function Footer() {
                 {/* ── Bottom Bar ── */}
                 <div className="mt-8 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-cream-400">
                     <p>
-                        © {currentYear} L.Roshan Lal Ji. All rights reserved.
+                        © {currentYear} L.Roshanlal Ji Sweets. All rights reserved.
                     </p>
                     <p className="flex items-center gap-1">
                         Made with <Heart size={11} className="text-saffron-400 fill-current" /> by Parv

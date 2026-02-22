@@ -13,12 +13,15 @@ interface ProductCardProps {
     className?: string;
 }
 
-export default function ProductCard({ product, className }: ProductCardProps) {
+export default function ProductCard({ product: initialProduct, className }: ProductCardProps) {
     const { items, addItem, updateQuantity } = useCart();
-    const cartItem = items.find((i) => i.id === product.id);
+    const cartItem = items.find((i) => i.id === initialProduct.id);
     const qty = cartItem?.quantity ?? 0;
 
     const [justAdded, setJustAdded] = useState(false);
+    const [product, setProduct] = useState(initialProduct);
+    const [hoveredRating, setHoveredRating] = useState<number | null>(null);
+    const [isRatingSubmitting, setIsRatingSubmitting] = useState(false);
 
     const handleAdd = () => {
         addItem({
@@ -28,9 +31,36 @@ export default function ProductCard({ product, className }: ProductCardProps) {
             image: product.image,
             weightGrams: product.weightGrams,
             gstRate: product.categoryData?.gstRate ?? 5,
+            isFreeDeliveryEligible: product.badge?.toLowerCase() === 'free delivery',
         });
         setJustAdded(true);
         setTimeout(() => setJustAdded(false), 1400);
+    };
+
+    const handleRatingClick = async (rating: number) => {
+        if (isRatingSubmitting) return;
+        
+        setIsRatingSubmitting(true);
+        try {
+            const res = await fetch(`/api/products/${product.id}/rate`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ rating }),
+            });
+
+            if (res.ok) {
+                const data = await res.json();
+                setProduct({ 
+                    ...product, 
+                    rating: data.rating, 
+                    reviewCount: data.reviewCount 
+                });
+            }
+        } catch (error) {
+            console.error('Failed to submit rating:', error);
+        } finally {
+            setIsRatingSubmitting(false);
+        }
     };
 
     const discount = product.originalPrice
@@ -106,16 +136,40 @@ export default function ProductCard({ product, className }: ProductCardProps) {
                     {product.description}
                 </p>
 
-                {/* Rating */}
+                {/* Rating - Interactive */}
                 <div className="flex items-center gap-1.5">
-                    <div className="flex items-center gap-0.5">
-                        {Array.from({ length: 5 }).map((_, i) => (
-                            <Star
-                                key={i}
-                                size={11}
-                                className={i < Math.floor(product.rating) ? 'text-gold-400 fill-gold-400' : 'text-cream-300 fill-cream-300'}
-                            />
-                        ))}
+                    <div 
+                        className="flex items-center gap-0.5"
+                        onMouseLeave={() => setHoveredRating(null)}
+                    >
+                        {Array.from({ length: 5 }).map((_, i) => {
+                            const starValue = i + 1;
+                            const isFilled = hoveredRating !== null 
+                                ? starValue <= hoveredRating 
+                                : starValue <= Math.floor(product.rating);
+                            
+                            return (
+                                <button
+                                    key={i}
+                                    type="button"
+                                    onClick={() => handleRatingClick(starValue)}
+                                    onMouseEnter={() => setHoveredRating(starValue)}
+                                    disabled={isRatingSubmitting}
+                                    className="cursor-pointer hover:scale-125 transition-transform disabled:cursor-not-allowed disabled:opacity-50"
+                                    aria-label={`Rate ${starValue} stars`}
+                                >
+                                    <Star
+                                        size={14}
+                                        className={clsx(
+                                            'transition-colors duration-150',
+                                            isFilled 
+                                                ? 'text-gold-400 fill-gold-400' 
+                                                : 'text-cream-300 fill-cream-300'
+                                        )}
+                                    />
+                                </button>
+                            );
+                        })}
                     </div>
                     <span className="text-[11px] text-maroon-600 font-medium">{product.rating.toFixed(1)}</span>
                     <span className="text-[10px] text-maroon-400">({product.reviewCount})</span>

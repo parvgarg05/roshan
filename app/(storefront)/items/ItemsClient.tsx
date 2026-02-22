@@ -6,17 +6,18 @@ import ProductCard from '@/components/ProductCard';
 import CategoryCarousel from '@/components/CategoryCarousel';
 import { ProductCardSkeleton } from '@/components/ui/Skeleton';
 import Input from '@/components/ui/Input';
-import { CATEGORIES } from '@/lib/products';
-import type { Product, ProductCategory } from '@/types';
+import type { Product, ProductCategory, CategoryMeta } from '@/types';
 
 const PER_PAGE = 12;
 
 export default function ItemsClient({
     initialProducts,
     initialCategory = 'all',
+    categories,
 }: {
     initialProducts: Product[];
     initialCategory?: ProductCategory;
+    categories: CategoryMeta[];
 }) {
     const [activeCategory, setActiveCategory] = useState<ProductCategory>(initialCategory);
     const [search, setSearch] = useState('');
@@ -79,7 +80,7 @@ export default function ItemsClient({
                     <h1 className="font-display font-bold text-3xl sm:text-4xl mb-1">All Sweets & Mithai</h1>
                     <p className="text-cream-300 text-sm">
                         {filtered.length} item{filtered.length !== 1 ? 's' : ''} found
-                        {activeCategory !== 'all' && ` in ${CATEGORIES.find(c => c.id === activeCategory)?.label}`}
+                        {activeCategory !== 'all' && ` in ${categories.find(c => c.id === activeCategory)?.label}`}
                     </p>
                 </div>
             </div>
@@ -123,7 +124,7 @@ export default function ItemsClient({
             {/* ── Category carousel ── */}
             <div className="bg-white border-b border-cream-100 py-3">
                 <div className="section-container">
-                    <CategoryCarousel activeCategory={activeCategory} onSelect={handleCategory} />
+                    <CategoryCarousel categories={categories} activeCategory={activeCategory} onSelect={handleCategory} />
                 </div>
             </div>
 

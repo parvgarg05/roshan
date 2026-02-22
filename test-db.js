@@ -8,7 +8,7 @@ async function test() {
             body: JSON.stringify({
                 customer: {
                     name: 'Test User',
-                    phone: '9876543210',
+                    phone: '7055513961',
                     email: 'test@example.com',
                     addressLine: 'Test Address',
                     city: 'Test City',

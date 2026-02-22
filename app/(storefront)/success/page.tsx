@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { CheckCircle2, Package, Clock, Phone, ArrowRight, ShoppingBag } from 'lucide-react';
+import { CheckCircle2, Clock, Phone, ArrowRight, ShoppingBag } from 'lucide-react';
 import Button from '@/components/ui/Button';
 
 export const metadata: Metadata = {
@@ -75,7 +75,7 @@ export default async function SuccessPage({ searchParams }: SuccessPageProps) {
                                 done: true,
                             },
                             {
-                                icon: Package,
+                                icon: ShoppingBag,
                                 color: 'text-saffron-500',
                                 bg: 'bg-saffron-50',
                                 title: 'Preparing Your Order',
@@ -113,11 +113,11 @@ export default async function SuccessPage({ searchParams }: SuccessPageProps) {
                         Questions about your order?
                     </p>
                     <a
-                        href="tel:+919876543210"
+                        href="tel:+917055513961"
                         className="flex items-center justify-center gap-2 w-full py-2.5 border border-maroon-100 rounded-xl text-sm font-medium text-maroon-700 hover:bg-maroon-50 transition-colors"
                     >
                         <Phone size={15} />
-                        Call Us: +91 98765 43210
+                        Call Us: +91 70555 13961
                     </a>
                 </div>
 

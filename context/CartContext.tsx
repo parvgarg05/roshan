@@ -1,6 +1,11 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import {
+    DEFAULT_DELIVERY_PRICING,
+    calculateDeliveryCharge,
+    type DeliveryPricingConfig,
+} from '@/lib/delivery';
 
 /* ─── Types ─────────────────────────────────────────────── */
 export interface CartItem {
@@ -11,6 +16,7 @@ export interface CartItem {
     image: string;
     weightGrams: number;
     gstRate: number;
+    isFreeDeliveryEligible?: boolean;
 }
 
 interface CartContextValue {
@@ -19,6 +25,9 @@ interface CartContextValue {
     totalPrice: number;
     cgstTotal: number;
     sgstTotal: number;
+    hasFreeDeliveryEligibleItem: boolean;
+    deliveryConfig: DeliveryPricingConfig;
+    deliveryCharge: number;
     addItem: (item: Omit<CartItem, 'quantity'>) => void;
     removeItem: (id: string) => void;
     updateQuantity: (id: string, quantity: number) => void;
@@ -32,6 +41,7 @@ const CART_STORAGE_KEY = 'rl_cart';
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
     const [items, setItems] = useState<CartItem[]>([]);
+    const [deliveryConfig, setDeliveryConfig] = useState<DeliveryPricingConfig>(DEFAULT_DELIVERY_PRICING);
 
     // Hydrate from localStorage on mount
     useEffect(() => {
@@ -47,6 +57,30 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     useEffect(() => {
         localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
     }, [items]);
+
+    useEffect(() => {
+        let isMounted = true;
+
+        const loadDeliveryConfig = async () => {
+            try {
+                const res = await fetch('/api/config/delivery', { cache: 'no-store' });
+                if (!res.ok) return;
+
+                const config = await res.json() as DeliveryPricingConfig;
+                if (isMounted) {
+                    setDeliveryConfig(config);
+                }
+            } catch {
+                // Ignore and keep defaults
+            }
+        };
+
+        loadDeliveryConfig();
+
+        return () => {
+            isMounted = false;
+        };
+    }, []);
 
     const addItem = (product: Omit<CartItem, 'quantity'>) => {
         setItems((prev) => {
@@ -74,6 +108,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
     const totalItems = items.reduce((sum, i) => sum + i.quantity, 0);
     const totalPrice = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
+    const hasFreeDeliveryEligibleItem = items.some((i) => i.isFreeDeliveryEligible);
+    const deliveryCharge = calculateDeliveryCharge(totalPrice, hasFreeDeliveryEligibleItem, deliveryConfig);
 
     // Derived GST State
     const { cgstTotal, sgstTotal } = items.reduce((acc, i) => {
@@ -87,7 +123,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
     return (
         <CartContext.Provider
-            value={{ items, totalItems, totalPrice, cgstTotal, sgstTotal, addItem, removeItem, updateQuantity, clearCart }}
+            value={{ items, totalItems, totalPrice, cgstTotal, sgstTotal, hasFreeDeliveryEligibleItem, deliveryConfig, deliveryCharge, addItem, removeItem, updateQuantity, clearCart }}
         >
             {children}
         </CartContext.Provider>

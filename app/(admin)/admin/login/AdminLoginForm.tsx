@@ -48,7 +48,7 @@ export default function AdminLoginForm() {
                 </div>
 
                 <h1 className="font-display font-bold text-2xl text-maroon-900 mb-2">Admin Login</h1>
-                <p className="text-sm text-maroon-500 mb-8">Enter your master password to access the Roshanlal & Sons dashboard.</p>
+                <p className="text-sm text-maroon-500 mb-8">Enter your master password to access the L.Roshanlal Ji Sweets dashboard.</p>
 
                 <form onSubmit={handleLogin} className="space-y-4 text-left">
                     <Input

@@ -1,3 +1,5 @@
+import { calculateDeliveryCharge } from './delivery';
+
 // Shared utility helpers
 
 /**
@@ -14,12 +16,10 @@ export function formatCurrency(amount: number): string {
 }
 
 /**
- * Calculate delivery charge. Free above ₹499.
+ * Calculate delivery charge using current pricing rules.
  */
-export function getDeliveryCharge(subtotal: number): number {
-    if (subtotal >= 499) return 0;
-    if (subtotal >= 299) return 30;
-    return 50;
+export function getDeliveryCharge(subtotal: number, hasFreeDeliveryEligibleItem: boolean = false): number {
+    return calculateDeliveryCharge(subtotal, hasFreeDeliveryEligibleItem);
 }
 
 /**
