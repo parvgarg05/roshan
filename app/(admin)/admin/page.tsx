@@ -15,14 +15,17 @@ export default async function AdminDashboard() {
                 gte: todayStart,
                 lte: todayEnd,
             },
-            status: 'PAID',
+            NOT: { status: 'PENDING' },
         },
         select: {
             totalPaise: true,
+            status: true,
         },
     });
 
-    const todayRevenuePaise = todaysOrders.reduce((sum, o) => sum + o.totalPaise, 0);
+    const todayRevenuePaise = todaysOrders
+        .filter((o) => o.status !== 'FAILED')
+        .reduce((sum, o) => sum + o.totalPaise, 0);
 
     const pendingOrdersCount = await prisma.order.count({
         where: { status: 'PENDING' },
@@ -30,15 +33,17 @@ export default async function AdminDashboard() {
 
     // 2. Fetch All-Time Revenue + Orders
     const allOrders = await prisma.order.findMany({
-        where: { status: 'PAID' },
-        select: { totalPaise: true },
+        where: { NOT: { status: 'PENDING' } },
+        select: { totalPaise: true, status: true },
     });
 
     const allOrdersCount = await prisma.order.count({
-        where: { status: 'PAID' },
+        where: { NOT: { status: 'PENDING' } },
     });
 
-    const allTimeRevenuePaise = allOrders.reduce((sum, o) => sum + o.totalPaise, 0);
+    const allTimeRevenuePaise = allOrders
+        .filter((o) => o.status !== 'FAILED')
+        .reduce((sum, o) => sum + o.totalPaise, 0);
 
     const STATS = [
         {

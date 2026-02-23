@@ -9,17 +9,14 @@ export default async function OrdersPage() {
     // Fetch all orders with their customer and first few items
     const orders = await prisma.order.findMany({
         where: {
-            NOT: {
-                OR: [
-                    { status: 'FAILED' },
-                    {
-                        AND: [
-                            { status: 'PENDING' },
-                            { razorpayPaymentId: null },
-                        ],
-                    },
-                ],
-            },
+            OR: [
+                { status: 'PAID' },
+                { status: 'PROCESSING' },
+                { status: 'DELIVERED' },
+                // If admin marks as FAILED, still show
+                { status: 'FAILED' },
+                { status: 'REFUNDED' },
+            ],
         },
         orderBy: { createdAt: 'desc' },
         include: {
