@@ -32,7 +32,6 @@ model Customer {
   orders  Order[]
   ratings ProductRating[]
 
-  @@unique([email, phone])
   @@index([email])
   @@index([phone])
 }

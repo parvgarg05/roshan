@@ -1,7 +1,6 @@
 import { prisma } from '@/lib/prisma';
-import { formatCurrency } from '@/lib/utils';
+import { formatCurrency, formatDateTimeIST } from '@/lib/utils';
 import StatusSelect from './StatusSelect';
-import { format } from 'date-fns';
 
 export default async function OrdersPage() {
     // Fetch all orders with their customer and first few items
@@ -48,7 +47,7 @@ export default async function OrdersPage() {
                                             #{order.id.slice(-8).toUpperCase()}
                                         </div>
                                         <div className="text-maroon-900 font-medium mb-2">
-                                            {format(order.createdAt, 'MMM d, h:mm a')}
+                                            {formatDateTimeIST(order.createdAt)}
                                         </div>
                                         <ul className="text-xs text-maroon-600 space-y-1 max-w-[200px] truncate">
                                             {order.items.map(item => (

@@ -1,5 +1,9 @@
 import { calculateDeliveryCharge } from './delivery';
 
+const INDIA_TIME_ZONE = 'Asia/Kolkata';
+const ORDER_START_HOUR_IST = 9;
+const ORDER_END_HOUR_IST = 21;
+
 // Shared utility helpers
 
 /**
@@ -45,4 +49,90 @@ export function slugify(text: string): string {
  */
 export function truncate(text: string, max: number): string {
     return text.length > max ? `${text.slice(0, max).trimEnd()}…` : text;
+}
+
+/**
+ * Format a date in India Standard Time.
+ */
+export function formatDateTimeIST(
+    date: Date,
+    options: Intl.DateTimeFormatOptions = {
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true,
+    }
+): string {
+    return new Intl.DateTimeFormat('en-IN', {
+        timeZone: INDIA_TIME_ZONE,
+        ...options,
+    }).format(date);
+}
+
+function getTimeZoneOffsetMs(date: Date, timeZone: string): number {
+    const parts = new Intl.DateTimeFormat('en-US', {
+        timeZone,
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false,
+    }).formatToParts(date);
+
+    const year = Number(parts.find((part) => part.type === 'year')?.value);
+    const month = Number(parts.find((part) => part.type === 'month')?.value);
+    const day = Number(parts.find((part) => part.type === 'day')?.value);
+    const hour = Number(parts.find((part) => part.type === 'hour')?.value);
+    const minute = Number(parts.find((part) => part.type === 'minute')?.value);
+    const second = Number(parts.find((part) => part.type === 'second')?.value);
+
+    const asUtcMs = Date.UTC(year, month - 1, day, hour, minute, second);
+    return asUtcMs - date.getTime();
+}
+
+/**
+ * Returns UTC boundaries for the current calendar day in IST.
+ */
+export function getUtcRangeForCurrentISTDay(referenceDate: Date = new Date()): { start: Date; end: Date } {
+    const dateParts = new Intl.DateTimeFormat('en-US', {
+        timeZone: INDIA_TIME_ZONE,
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+    }).formatToParts(referenceDate);
+
+    const year = Number(dateParts.find((part) => part.type === 'year')?.value);
+    const month = Number(dateParts.find((part) => part.type === 'month')?.value);
+    const day = Number(dateParts.find((part) => part.type === 'day')?.value);
+
+    const istMidnightAsUtcMs = Date.UTC(year, month - 1, day, 0, 0, 0, 0);
+    const istNextMidnightAsUtcMs = Date.UTC(year, month - 1, day + 1, 0, 0, 0, 0);
+
+    const startOffset = getTimeZoneOffsetMs(new Date(istMidnightAsUtcMs), INDIA_TIME_ZONE);
+    const nextStartOffset = getTimeZoneOffsetMs(new Date(istNextMidnightAsUtcMs), INDIA_TIME_ZONE);
+
+    const start = new Date(istMidnightAsUtcMs - startOffset);
+    const nextStart = new Date(istNextMidnightAsUtcMs - nextStartOffset);
+    const end = new Date(nextStart.getTime() - 1);
+
+    return { start, end };
+}
+
+/**
+ * Returns whether orders are currently allowed in IST.
+ * Allowed window: 09:00 (inclusive) to 21:00 (exclusive).
+ */
+export function isWithinOrderWindowIST(referenceDate: Date = new Date()): boolean {
+    const hourInIST = Number(
+        new Intl.DateTimeFormat('en-US', {
+            timeZone: INDIA_TIME_ZONE,
+            hour: '2-digit',
+            hour12: false,
+        }).format(referenceDate)
+    );
+
+    return hourInIST >= ORDER_START_HOUR_IST && hourInIST < ORDER_END_HOUR_IST;
 }

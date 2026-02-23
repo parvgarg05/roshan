@@ -3,12 +3,20 @@ import { CreateOrderRequestSchema } from '@/lib/validations/checkout';
 import { calculateDeliveryCharge, getDeliveryPricingConfig } from '@/lib/delivery';
 import { getRazorpay } from '@/lib/razorpay';
 import { prisma } from '@/lib/prisma';
+import { isWithinOrderWindowIST } from '@/lib/utils';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
 export async function POST(req: NextRequest) {
     try {
+        if (!isWithinOrderWindowIST()) {
+            return NextResponse.json(
+                { error: 'Sorry, we are receiving orders only between 9:00 AM and 9:00 PM.' },
+                { status: 403 }
+            );
+        }
+
         // 1. Parse & validate request body
         const body = await req.json();
         const parsed = CreateOrderRequestSchema.safeParse(body);
@@ -107,24 +115,14 @@ export async function POST(req: NextRequest) {
             },
         });
 
-        // 4. Upsert Customer + create Order in DB
-        const existingCustomer = await prisma.customer.findFirst({
-            where: { phone: customer.phone },
-            orderBy: { createdAt: 'asc' },
+        // 4. Create Customer + create Order in DB
+        const dbCustomer = await prisma.customer.create({
+            data: {
+                name: customer.name,
+                phone: customer.phone,
+                email: customer.email,
+            },
         });
-
-        const dbCustomer = existingCustomer
-            ? await prisma.customer.update({
-                where: { id: existingCustomer.id },
-                data: { name: customer.name, email: customer.email },
-            })
-            : await prisma.customer.create({
-                data: {
-                    name: customer.name,
-                    phone: customer.phone,
-                    email: customer.email,
-                },
-            });
 
         const dbOrder = await prisma.order.create({
             data: {

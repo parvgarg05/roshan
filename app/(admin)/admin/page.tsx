@@ -1,11 +1,9 @@
-import { startOfDay, endOfDay } from 'date-fns';
 import { prisma } from '@/lib/prisma';
-import { formatCurrency } from '@/lib/utils';
+import { formatCurrency, getUtcRangeForCurrentISTDay } from '@/lib/utils';
 import { IndianRupee, TrendingUp, Package, Clock } from 'lucide-react';
 
 export default async function AdminDashboard() {
-    const todayStart = startOfDay(new Date());
-    const todayEnd = endOfDay(new Date());
+    const { start: todayStart, end: todayEnd } = getUtcRangeForCurrentISTDay();
 
     // 1. Fetch Today's Orders
     const todaysOrders = await prisma.order.findMany({

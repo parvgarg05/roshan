@@ -22,6 +22,9 @@ export default function CheckoutPage() {
                     <p className="text-cream-300 text-sm mt-1">
                         🔒 Your payment is secured by Razorpay — India&apos;s most trusted payment gateway
                     </p>
+                    <p className="text-cream-200 text-xs mt-2">
+                        Order timing: 9:00 AM – 9:00 PM (IST)
+                    </p>
                 </div>
             </div>
 
