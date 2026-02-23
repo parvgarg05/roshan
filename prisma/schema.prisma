@@ -183,3 +183,10 @@ model DeliveryPricing {
   updatedAt                DateTime @updatedAt
 }
 
+model OrderTiming {
+  id        Int      @id
+  startHour Int      @default(9)
+  endHour   Int      @default(21)
+  updatedAt DateTime @updatedAt
+}
+

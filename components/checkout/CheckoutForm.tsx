@@ -4,7 +4,7 @@ import { useState, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
-import { ShieldCheck, CreditCard, Lock, Truck, AlertCircle } from 'lucide-react';
+import { ShieldCheck, CreditCard, Lock, Truck, AlertCircle, Loader2 } from 'lucide-react';
 import {
     CheckoutFormSchema,
     type CheckoutFormValues,
@@ -55,6 +55,18 @@ function loadRazorpayScript(): Promise<boolean> {
     });
 }
 
+async function markOrderAsFailed(internalOrderId: string): Promise<void> {
+    try {
+        await fetch('/api/checkout/cancel-order', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ internalOrderId }),
+        });
+    } catch {
+        // Ignore network issues here; this is a best-effort cleanup call.
+    }
+}
+
 /* ─── FormField helper ───────────────────────────────────────── */
 function FormField({
     label, error, children, required,
@@ -85,6 +97,7 @@ export default function CheckoutForm() {
 
     const [apiError, setApiError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [isFinalizingPayment, setIsFinalizingPayment] = useState(false);
 
     const {
         register,
@@ -144,10 +157,16 @@ export default function CheckoutForm() {
                     theme: { color: '#f97316' },   // saffron
                     modal: {
                         backdropclose: false,
-                        ondismiss: () => reject(new Error('Payment cancelled by user.')),
+                        ondismiss: () => {
+                            setIsFinalizingPayment(false);
+                            void markOrderAsFailed(orderData.internalOrderId);
+                            reject(new Error('Payment cancelled by user.'));
+                        },
                     },
                     handler: async (response: RazorpayResponse) => {
                         try {
+                            setIsFinalizingPayment(true);
+
                             // Step 4: Verify signature on our server
                             const verifyRes = await fetch('/api/checkout/verify', {
                                 method: 'POST',
@@ -162,6 +181,7 @@ export default function CheckoutForm() {
 
                             if (!verifyRes.ok) {
                                 const errData = await verifyRes.json();
+                                setIsFinalizingPayment(false);
                                 reject(new Error(errData.error ?? 'Payment verification failed.'));
                                 return;
                             }
@@ -170,25 +190,43 @@ export default function CheckoutForm() {
 
                             // Step 5: Clear cart and redirect
                             clearCart();
-                            router.push(`/success?orderId=${verifyData.orderId}`);
+                            router.replace(`/success?orderId=${verifyData.orderId}`);
                             resolve();
                         } catch (e) {
+                            setIsFinalizingPayment(false);
                             reject(e);
                         }
                     },
                 });
 
-                rzp.on('payment.failed', () =>
-                    reject(new Error('Payment was declined. Please try a different payment method.'))
-                );
+                rzp.on('payment.failed', () => {
+                    setIsFinalizingPayment(false);
+                    void markOrderAsFailed(orderData.internalOrderId);
+                    reject(new Error('Payment was declined. Please try a different payment method.'));
+                });
                 rzp.open();
             });
         } catch (err) {
+            setIsFinalizingPayment(false);
             setApiError(err instanceof Error ? err.message : 'Something went wrong.');
         } finally {
             setIsLoading(false);
         }
     }, [items, clearCart, router]);
+
+    if (isFinalizingPayment) {
+        return (
+            <div className="max-w-2xl mx-auto w-full">
+                <div className="card-base p-8 text-center hover:!-translate-y-0">
+                    <Loader2 size={28} className="mx-auto text-saffron-500 animate-spin mb-4" />
+                    <h2 className="font-display font-bold text-2xl text-maroon-900">Finalizing your order...</h2>
+                    <p className="text-maroon-500 mt-2 text-sm">
+                        Please wait while we confirm your payment and prepare your order confirmation.
+                    </p>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="grid lg:grid-cols-5 gap-6 lg:gap-10">

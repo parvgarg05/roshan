@@ -3,16 +3,20 @@ import { CreateOrderRequestSchema } from '@/lib/validations/checkout';
 import { calculateDeliveryCharge, getDeliveryPricingConfig } from '@/lib/delivery';
 import { getRazorpay } from '@/lib/razorpay';
 import { prisma } from '@/lib/prisma';
-import { isWithinOrderWindowIST } from '@/lib/utils';
+import { formatOrderWindowIST, getOrderTimingConfig, isWithinOrderWindowIST } from '@/lib/orderTiming';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
 export async function POST(req: NextRequest) {
     try {
-        if (!isWithinOrderWindowIST()) {
+        const orderTiming = await getOrderTimingConfig();
+        const enforceSetting = (process.env.ENFORCE_ORDER_TIMING || '').toLowerCase();
+        const shouldEnforceOrderTiming = enforceSetting !== 'false';
+
+        if (shouldEnforceOrderTiming && !isWithinOrderWindowIST(orderTiming)) {
             return NextResponse.json(
-                { error: 'Sorry, we are receiving orders only between 9:00 AM and 9:00 PM.' },
+                { error: `Sorry, we are receiving orders only between ${formatOrderWindowIST(orderTiming)}.` },
                 { status: 403 }
             );
         }

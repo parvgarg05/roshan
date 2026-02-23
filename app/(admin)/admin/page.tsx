@@ -15,25 +15,27 @@ export default async function AdminDashboard() {
                 gte: todayStart,
                 lte: todayEnd,
             },
+            status: 'PAID',
         },
         select: {
             totalPaise: true,
-            status: true,
         },
     });
 
-    const todayRevenuePaise = todaysOrders
-        .filter((o) => o.status !== 'FAILED')
-        .reduce((sum, o) => sum + o.totalPaise, 0);
+    const todayRevenuePaise = todaysOrders.reduce((sum, o) => sum + o.totalPaise, 0);
 
     const pendingOrdersCount = await prisma.order.count({
         where: { status: 'PENDING' },
     });
 
-    // 2. Fetch All-Time Revenue
+    // 2. Fetch All-Time Revenue + Orders
     const allOrders = await prisma.order.findMany({
-        where: { status: { not: 'FAILED' } },
+        where: { status: 'PAID' },
         select: { totalPaise: true },
+    });
+
+    const allOrdersCount = await prisma.order.count({
+        where: { status: 'PAID' },
     });
 
     const allTimeRevenuePaise = allOrders.reduce((sum, o) => sum + o.totalPaise, 0);
@@ -52,6 +54,13 @@ export default async function AdminDashboard() {
             icon: Package,
             color: 'text-saffron-600',
             bg: 'bg-saffron-100',
+        },
+        {
+            label: 'All-Time Orders',
+            value: allOrdersCount.toString(),
+            icon: Package,
+            color: 'text-indigo-600',
+            bg: 'bg-indigo-100',
         },
         {
             label: 'Pending Orders',

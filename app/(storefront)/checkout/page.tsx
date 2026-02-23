@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { ShoppingBag } from 'lucide-react';
 import CheckoutForm from '@/components/checkout/CheckoutForm';
+import { formatOrderWindowIST, getOrderTimingConfig } from '@/lib/orderTiming';
 
 export const metadata: Metadata = {
     title: 'Checkout',
@@ -8,7 +9,9 @@ export const metadata: Metadata = {
     robots: { index: false, follow: false }, // Don't index checkout pages
 };
 
-export default function CheckoutPage() {
+export default async function CheckoutPage() {
+    const orderTiming = await getOrderTimingConfig();
+
     return (
         <div className="min-h-screen bg-cream-100">
             {/* Header */}
@@ -23,7 +26,7 @@ export default function CheckoutPage() {
                         🔒 Your payment is secured by Razorpay — India&apos;s most trusted payment gateway
                     </p>
                     <p className="text-cream-200 text-xs mt-2">
-                        Order timing: 9:00 AM – 9:00 PM (IST)
+                        Order timing: {formatOrderWindowIST(orderTiming)}
                     </p>
                 </div>
             </div>

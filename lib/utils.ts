@@ -1,8 +1,6 @@
 import { calculateDeliveryCharge } from './delivery';
 
 const INDIA_TIME_ZONE = 'Asia/Kolkata';
-const ORDER_START_HOUR_IST = 9;
-const ORDER_END_HOUR_IST = 21;
 
 // Shared utility helpers
 
@@ -119,20 +117,4 @@ export function getUtcRangeForCurrentISTDay(referenceDate: Date = new Date()): {
     const end = new Date(nextStart.getTime() - 1);
 
     return { start, end };
-}
-
-/**
- * Returns whether orders are currently allowed in IST.
- * Allowed window: 09:00 (inclusive) to 21:00 (exclusive).
- */
-export function isWithinOrderWindowIST(referenceDate: Date = new Date()): boolean {
-    const hourInIST = Number(
-        new Intl.DateTimeFormat('en-US', {
-            timeZone: INDIA_TIME_ZONE,
-            hour: '2-digit',
-            hour12: false,
-        }).format(referenceDate)
-    );
-
-    return hourInIST >= ORDER_START_HOUR_IST && hourInIST < ORDER_END_HOUR_IST;
 }

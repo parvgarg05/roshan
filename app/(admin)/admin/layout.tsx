@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import { PackageSearch, LayoutDashboard, Tags, BadgeIndianRupee, FolderTree, Menu, X } from 'lucide-react';
+import { PackageSearch, LayoutDashboard, Tags, BadgeIndianRupee, FolderTree, Menu, X, Clock3 } from 'lucide-react';
 import LogoutButton from './LogoutButton';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -23,6 +23,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     <NavItem href="/admin/products" icon={Tags} label="Products" />
                     <NavItem href="/admin/categories" icon={FolderTree} label="Categories" />
                     <NavItem href="/admin/pricing" icon={BadgeIndianRupee} label="Pricing" />
+                    <NavItem href="/admin/timing" icon={Clock3} label="Order Timing" />
                 </nav>
 
                 <div className="p-4 border-t border-maroon-800">
@@ -61,6 +62,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     <NavItem href="/admin/products" icon={Tags} label="Products" />
                     <NavItem href="/admin/categories" icon={FolderTree} label="Categories" />
                     <NavItem href="/admin/pricing" icon={BadgeIndianRupee} label="Pricing" />
+                    <NavItem href="/admin/timing" icon={Clock3} label="Order Timing" />
                 </nav>
 
                 <div className="p-4 border-t border-maroon-800">

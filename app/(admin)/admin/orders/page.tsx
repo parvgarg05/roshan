@@ -8,6 +8,19 @@ export const revalidate = 0;
 export default async function OrdersPage() {
     // Fetch all orders with their customer and first few items
     const orders = await prisma.order.findMany({
+        where: {
+            NOT: {
+                OR: [
+                    { status: 'FAILED' },
+                    {
+                        AND: [
+                            { status: 'PENDING' },
+                            { razorpayPaymentId: null },
+                        ],
+                    },
+                ],
+            },
+        },
         orderBy: { createdAt: 'desc' },
         include: {
             customer: true,
