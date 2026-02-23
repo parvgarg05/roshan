@@ -2,6 +2,9 @@ import { prisma } from '@/lib/prisma';
 import { formatCurrency, formatDateTimeIST } from '@/lib/utils';
 import StatusSelect from './StatusSelect';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export default async function OrdersPage() {
     // Fetch all orders with their customer and first few items
     const orders = await prisma.order.findMany({

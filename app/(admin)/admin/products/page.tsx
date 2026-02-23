@@ -6,6 +6,9 @@ import { Pencil, Plus } from 'lucide-react';
 import Link from 'next/link';
 import DeleteProductButton from './DeleteProductButton';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export default async function AdminProductsPage() {
     const products = await prisma.product.findMany({
         orderBy: { createdAt: 'desc' },

@@ -2,6 +2,9 @@ import { prisma } from '@/lib/prisma';
 import { formatCurrency, getUtcRangeForCurrentISTDay } from '@/lib/utils';
 import { IndianRupee, TrendingUp, Package, Clock } from 'lucide-react';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export default async function AdminDashboard() {
     const { start: todayStart, end: todayEnd } = getUtcRangeForCurrentISTDay();
 
