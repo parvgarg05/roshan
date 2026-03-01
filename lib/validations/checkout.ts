@@ -23,14 +23,22 @@ const AddressSchema = z.object({
 export const CheckoutFormSchema = z.object({
     name: z
         .string()
+        .trim()
         .min(2, 'Full name must be at least 2 characters')
         .max(80, 'Name too long')
         .regex(/^[a-zA-Z\s'.]+$/, 'Name may only contain letters and spaces'),
     phone: z
         .string()
-        .regex(/^[6-9]\d{9}$/, 'Enter a valid 10-digit Indian mobile number'),
+        .transform((value) => value.replace(/\D/g, ''))
+        .pipe(
+            z
+                .string()
+                .regex(/^[6-9]\d{9}$/, 'Enter a valid 10-digit Indian mobile number')
+        ),
     email: z
         .string()
+        .trim()
+        .toLowerCase()
         .email('Enter a valid email address')
         .max(120, 'Email too long'),
     ...AddressSchema.shape,

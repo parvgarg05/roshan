@@ -54,21 +54,12 @@ export interface ProductCardProps {
     className?: string;
 }
 
-const badgeColorMap = {
-    saffron: 'bg-saffron-100 text-saffron-700 border border-saffron-200',
-    gold: 'bg-gold-100   text-gold-700   border border-gold-200',
-    maroon: 'bg-maroon-100 text-maroon-700 border border-maroon-200',
-    green: 'bg-green-100  text-green-700  border border-green-200',
-};
-
 export function ProductCard({
     name,
     description,
     price,
     originalPrice,
     image,
-    badge,
-    badgeColor = 'saffron',
     rating,
     reviewCount,
     isVeg = true,
@@ -114,13 +105,6 @@ export function ProductCard({
                             )}
                         />
                     </span>
-
-                    {/* Promo badge */}
-                    {badge && (
-                        <span className={clsx('px-2 py-0.5 text-[10px] font-bold rounded-lg uppercase tracking-wide', badgeColorMap[badgeColor])}>
-                            {badge}
-                        </span>
-                    )}
 
                     {/* Discount badge */}
                     {discount > 0 && (

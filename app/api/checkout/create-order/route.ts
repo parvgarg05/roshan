@@ -33,6 +33,8 @@ export async function POST(req: NextRequest) {
         }
 
         const { customer, items } = parsed.data;
+        const customerPhone = customer.phone.replace(/\D/g, '');
+        const customerEmail = customer.email.trim().toLowerCase();
 
         // 2. Server-side price calculation — NEVER trust client prices
         let subtotal = 0;
@@ -114,19 +116,29 @@ export async function POST(req: NextRequest) {
             receipt: `rl_${Date.now()}`,
             notes: {
                 customer_name: customer.name,
-                customer_phone: customer.phone,
-                customer_email: customer.email,
+                customer_phone: customerPhone,
+                customer_email: customerEmail,
             },
         });
 
         // 4. Create Customer + create Order in DB
-        const dbCustomer = await prisma.customer.create({
-            data: {
-                name: customer.name,
-                phone: customer.phone,
-                email: customer.email,
+        let dbCustomer = await prisma.customer.findFirst({
+            where: {
+                phone: customerPhone,
+                email: customerEmail,
             },
+            orderBy: { createdAt: 'asc' },
         });
+
+        if (!dbCustomer) {
+            dbCustomer = await prisma.customer.create({
+                data: {
+                    name: customer.name,
+                    phone: customerPhone,
+                    email: customerEmail,
+                },
+            });
+        }
 
         const dbOrder = await prisma.order.create({
             data: {

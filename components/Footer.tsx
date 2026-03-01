@@ -8,10 +8,10 @@ import {
 } from 'lucide-react';
 
 const SOCIAL_LINKS = [
-    { Icon: Instagram, href: 'https://instagram.com', label: 'Instagram', color: 'hover:text-pink-500' },
-    { Icon: Facebook, href: 'https://facebook.com', label: 'Facebook', color: 'hover:text-blue-500' },
-    { Icon: Youtube, href: 'https://youtube.com', label: 'YouTube', color: 'hover:text-red-500' },
-    { Icon: Twitter, href: 'https://twitter.com', label: 'Twitter', color: 'hover:text-sky-500' },
+    { Icon: Instagram, href: 'https://www.instagram.com/roshanlalsweets/', label: 'Instagram', color: 'hover:text-pink-500' },
+    { Icon: Facebook, href: 'https://www.facebook.com/roshanlalsweets/', label: 'Facebook', color: 'hover:text-blue-500' },
+    // { Icon: Youtube, href: 'https://youtube.com', label: 'YouTube', color: 'hover:text-red-500' },
+    // { Icon: Twitter, href: 'https://twitter.com', label: 'Twitter', color: 'hover:text-sky-500' },
 ];
 
 const QUICK_LINKS = [

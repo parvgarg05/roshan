@@ -2,8 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { Inter, Playfair_Display, Noto_Serif_Devanagari } from 'next/font/google';
 import './globals.css';
 import { CartProvider } from '@/context/CartContext';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
+import SiteChrome from '@/components/SiteChrome';
 
 /* ─── Font Definitions ──────────────────────────────────── */
 const inter = Inter({
@@ -49,9 +48,9 @@ export const metadata: Metadata = {
     robots: { index: true, follow: true },
     icons: {
         icon: [
-            { url: '/logo-32.png', sizes: '32x32', type: 'image/png' },
-            { url: '/logo-64.png', sizes: '64x64', type: 'image/png' },
-            { url: '/logo-128.png', sizes: '128x128', type: 'image/png' },
+            { url: '/logo4-32.png', sizes: '32x32', type: 'image/png' },
+            { url: '/logo4-64.png', sizes: '64x64', type: 'image/png' },
+            { url: '/logo4-128.png', sizes: '128x128', type: 'image/png' },
         ],
         apple: { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
     },
@@ -77,9 +76,7 @@ export default function RootLayout({
         >
             <body className="min-h-screen bg-cream-100 flex flex-col">
                 <CartProvider>
-                    <Navbar />
-                    <main className="flex-1">{children}</main>
-                    <Footer />
+                    <SiteChrome>{children}</SiteChrome>
                 </CartProvider>
             </body>
         </html>

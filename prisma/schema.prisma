@@ -32,19 +32,9 @@ model Customer {
   orders  Order[]
   ratings ProductRating[]
 
+  @@unique([email, phone])
   @@index([email])
   @@index([phone])
-}
-
-model CustomerOtp {
-  id         String   @id @default(cuid())
-  phone      String
-  codeHash   String
-  expiresAt  DateTime
-  consumedAt DateTime?
-  createdAt  DateTime @default(now())
-
-  @@index([phone, createdAt])
 }
 
 model Order {
@@ -67,8 +57,8 @@ model Order {
   pincode            String
 
   // Relations
-  customerId         String
-  customer           Customer    @relation(fields: [customerId], references: [id])
+  customerId         String?
+  customer           Customer?   @relation(fields: [customerId], references: [id], onDelete: SetNull)
   items              OrderItem[]
 
   createdAt          DateTime    @default(now())

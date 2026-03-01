@@ -82,6 +82,7 @@ export default function CartPage() {
                                     <div className="flex items-center justify-between gap-3 flex-wrap">
                                         <QuantitySelector
                                             value={item.quantity}
+                                            min={0}
                                             onChange={(v) => updateQuantity(item.id, v)}
                                             size="sm"
                                         />

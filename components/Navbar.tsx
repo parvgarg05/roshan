@@ -12,7 +12,6 @@ import clsx from 'clsx';
 const NAV_LINKS = [
     { label: 'Home', href: '/' },
     { label: 'All Items', href: '/items' },
-    { label: 'Specialties', href: '/items?category=cashew-sweets' },
     { label: 'About Us', href: '/about' },
     { label: 'Contact', href: '/contact' },
 ];
@@ -52,7 +51,7 @@ export default function Navbar() {
 
     return (
         <>
-            <header className="bg-cream-100 shadow-warm-sm">
+            <header className="sticky top-0 z-50 bg-cream-100 shadow-warm-sm">
                 <div className="section-container">
                     <div className="flex items-center justify-between h-16">
 
@@ -129,12 +128,11 @@ export default function Navbar() {
                                 )}
                             </button>
 
-                            {/* Order Now CTA (desktop) */}
                             <Link
-                                href="/items"
+                                href="/orders"
                                 className="hidden md:inline-flex items-center gap-1.5 px-4 py-2 bg-saffron-gradient text-white text-sm font-semibold rounded-xl shadow-warm-sm hover:shadow-glow hover:-translate-y-0.5 transition-all duration-200"
                             >
-                                Order Now
+                                My Orders
                             </Link>
 
                             {/* Hamburger */}
@@ -202,11 +200,11 @@ export default function Navbar() {
 
                 <div className="p-4 border-t border-cream-200 flex flex-col gap-3">
                     <Link
-                        href="/items"
+                        href="/orders"
                         onClick={() => setIsMenuOpen(false)}
                         className="flex items-center justify-center w-full py-3.5 bg-saffron-gradient text-white font-semibold rounded-2xl shadow-warm hover:shadow-glow transition-all duration-200 touch-target"
                     >
-                        Order Now
+                        My Orders
                     </Link>
                     <a
                         href="tel:+917055513961"

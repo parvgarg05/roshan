@@ -32,6 +32,8 @@ interface CartContextValue {
     removeItem: (id: string) => void;
     updateQuantity: (id: string, quantity: number) => void;
     clearCart: () => void;
+    cartToastMessage: string | null;
+    clearCartToast: () => void;
 }
 
 /* ─── Context ───────────────────────────────────────────── */
@@ -42,6 +44,7 @@ const CART_STORAGE_KEY = 'rl_cart';
 export function CartProvider({ children }: { children: React.ReactNode }) {
     const [items, setItems] = useState<CartItem[]>([]);
     const [deliveryConfig, setDeliveryConfig] = useState<DeliveryPricingConfig>(DEFAULT_DELIVERY_PRICING);
+    const [cartToastMessage, setCartToastMessage] = useState<string | null>(null);
 
     // Hydrate from localStorage on mount
     useEffect(() => {
@@ -92,7 +95,14 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
             }
             return [...prev, { ...product, quantity: 1 }];
         });
+        setCartToastMessage('Added to cart');
     };
+
+    useEffect(() => {
+        if (!cartToastMessage) return;
+        const timer = setTimeout(() => setCartToastMessage(null), 2200);
+        return () => clearTimeout(timer);
+    }, [cartToastMessage]);
 
     const removeItem = (id: string) =>
         setItems((prev) => prev.filter((i) => i.id !== id));
@@ -123,7 +133,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
     return (
         <CartContext.Provider
-            value={{ items, totalItems, totalPrice, cgstTotal, sgstTotal, hasFreeDeliveryEligibleItem, deliveryConfig, deliveryCharge, addItem, removeItem, updateQuantity, clearCart }}
+            value={{ items, totalItems, totalPrice, cgstTotal, sgstTotal, hasFreeDeliveryEligibleItem, deliveryConfig, deliveryCharge, addItem, removeItem, updateQuantity, clearCart, cartToastMessage, clearCartToast: () => setCartToastMessage(null) }}
         >
             {children}
         </CartContext.Provider>

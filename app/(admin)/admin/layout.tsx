@@ -9,7 +9,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
     return (
-        <div className="min-h-screen bg-cream-50 flex">
+        <div className="h-[100dvh] bg-cream-50 flex overflow-hidden">
             {/* Sidebar - Desktop */}
             <aside className="w-64 bg-maroon-900 text-cream-100 flex flex-col hidden md:flex shrink-0">
                 <div className="p-6 border-b border-maroon-800">
@@ -71,7 +71,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </aside>
 
             {/* Main Content Area */}
-            <main className="flex-1 overflow-x-hidden relative">
+            <main className="flex-1 overflow-y-auto overflow-x-hidden relative">
                 {/* Mobile Header */}
                 <div className="md:hidden bg-maroon-900 text-white p-4 flex items-center sticky top-0 z-30">
                     <button

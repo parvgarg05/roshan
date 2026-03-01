@@ -4,6 +4,7 @@ import { ArrowRight, Clock, Star, Truck, Award, Phone } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import ProductCard from '@/components/ProductCard';
 import CategoryCarousel from '@/components/CategoryCarousel';
+import HomeImageSlider from '@/components/HomeImageSlider';
 import { getFeaturedProducts, getTodaySpecials, getCategories } from '@/lib/products';
 import { formatCurrency } from '@/lib/utils';
 
@@ -87,37 +88,9 @@ export default async function HomePage() {
                             </div>
                         </div>
 
-                        {/* Right: Hero image collage */}
-                        <div className="hidden lg:grid grid-cols-2 gap-3 h-[480px]">
-                            <div className="relative rounded-3xl overflow-hidden shadow-warm-lg">
-                                <Image
-                                    src="/images/products/kaju-katli.png"
-                                    alt="Premium Indian Sweets"
-                                    fill
-                                    className="object-cover hover:scale-105 transition-transform duration-700"
-                                    priority
-                                />
-                            </div>
-                            <div className="flex flex-col gap-3">
-                                <div className="relative flex-1 rounded-3xl overflow-hidden shadow-warm-lg">
-                                    <Image
-                                        src="/images/products/motichoor-ladoo.png"
-                                        alt="Ladoo"
-                                        fill
-                                        className="object-cover hover:scale-105 transition-transform duration-700"
-                                        priority
-                                    />
-                                </div>
-                                <div className="relative flex-1 rounded-3xl overflow-hidden shadow-warm-lg">
-                                    <Image
-                                        src="/images/products/kaju-roll.png"
-                                        alt="Kaju Katli"
-                                        fill
-                                        className="object-cover hover:scale-105 transition-transform duration-700"
-                                        priority
-                                    />
-                                </div>
-                            </div>
+                        {/* Right: Auto image slider */}
+                        <div className="animate-fade-up [animation-delay:120ms]">
+                            <HomeImageSlider />
                         </div>
                     </div>
                 </div>

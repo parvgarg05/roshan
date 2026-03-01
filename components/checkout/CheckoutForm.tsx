@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
-import { ShieldCheck, CreditCard, Lock, Truck, AlertCircle, Loader2 } from 'lucide-react';
+import { ShieldCheck, CreditCard, Lock, Truck, AlertCircle } from 'lucide-react';
 import {
     CheckoutFormSchema,
     type CheckoutFormValues,
@@ -107,6 +107,11 @@ export default function CheckoutForm() {
         resolver: zodResolver(CheckoutFormSchema),
         mode: 'onTouched',
     });
+
+    useEffect(() => {
+        router.prefetch('/success');
+        router.prefetch('/orders');
+    }, [router]);
 
     const onSubmit = useCallback(async (data: CheckoutFormValues) => {
         setApiError(null);
@@ -213,20 +218,6 @@ export default function CheckoutForm() {
             setIsLoading(false);
         }
     }, [items, clearCart, router]);
-
-    if (isFinalizingPayment) {
-        return (
-            <div className="max-w-2xl mx-auto w-full">
-                <div className="card-base p-8 text-center hover:!-translate-y-0">
-                    <Loader2 size={28} className="mx-auto text-saffron-500 animate-spin mb-4" />
-                    <h2 className="font-display font-bold text-2xl text-maroon-900">Finalizing your order...</h2>
-                    <p className="text-maroon-500 mt-2 text-sm">
-                        Please wait while we confirm your payment and prepare your order confirmation.
-                    </p>
-                </div>
-            </div>
-        );
-    }
 
     return (
         <div className="grid lg:grid-cols-5 gap-6 lg:gap-10">
@@ -335,11 +326,15 @@ export default function CheckoutForm() {
                     variant="primary"
                     size="xl"
                     fullWidth
-                    loading={isLoading}
+                    loading={isLoading || isFinalizingPayment}
                     leftIcon={<Lock size={18} />}
-                    disabled={items.length === 0}
+                    disabled={items.length === 0 || isFinalizingPayment}
                 >
-                    {isLoading ? 'Processing…' : `Pay ${formatCurrency(grandTotal)} Securely`}
+                    {isFinalizingPayment
+                        ? 'Finalizing payment…'
+                        : isLoading
+                            ? 'Processing…'
+                            : `Pay ${formatCurrency(grandTotal)} Securely`}
                 </Button>
 
                 {/* Trust row */}

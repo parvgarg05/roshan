@@ -36,12 +36,10 @@ export default async function SuccessPage({ searchParams }: SuccessPageProps) {
 
                 {/* ── Animated checkmark card ── */}
                 <div className="card-base p-8 hover:!-translate-y-0 text-center mb-6">
-                    {/* Pulsing success circle */}
+                    {/* Success circle */}
                     <div className="relative mx-auto w-24 h-24 mb-6">
-                        {/* Outer ring pulse */}
-                        <span className="absolute inset-0 rounded-full bg-green-100 animate-ping opacity-60" />
-                        <span className="absolute inset-2 rounded-full bg-green-200 animate-ping opacity-40 animation-delay-150" />
-                        <div className="relative w-24 h-24 rounded-full bg-green-500 flex items-center justify-center shadow-lg">
+                        <span className="absolute inset-0 rounded-full border-4 border-green-100" />
+                        <div className="relative w-24 h-24 rounded-full bg-green-500 flex items-center justify-center shadow-lg motion-safe:animate-pulse">
                             <CheckCircle2 size={44} className="text-white" strokeWidth={2} />
                         </div>
                     </div>
@@ -123,6 +121,16 @@ export default async function SuccessPage({ searchParams }: SuccessPageProps) {
 
                 {/* ── CTAs ── */}
                 <div className="flex flex-col sm:flex-row gap-3">
+                    <Link href="/orders" className="flex-1">
+                        <Button
+                            variant="outline"
+                            size="lg"
+                            fullWidth
+                            rightIcon={<ArrowRight size={16} />}
+                        >
+                            View My Orders
+                        </Button>
+                    </Link>
                     <Link href="/items" className="flex-1">
                         <Button
                             variant="primary"

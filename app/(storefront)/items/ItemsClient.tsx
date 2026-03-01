@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useCallback, useTransition, useEffect } from 'react';
+import { useState, useMemo, useCallback, useTransition, useEffect, useRef } from 'react';
 import { Search, SlidersHorizontal, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import ProductCard from '@/components/ProductCard';
 import CategoryCarousel from '@/components/CategoryCarousel';
@@ -24,11 +24,39 @@ export default function ItemsClient({
     const [page, setPage] = useState(1);
     const [sortBy, setSortBy] = useState<'default' | 'price-asc' | 'price-desc' | 'rating'>('default');
     const [isPending, startTransition] = useTransition();
+    const productSectionRef = useRef<HTMLDivElement | null>(null);
+    const pageHeaderRef = useRef<HTMLDivElement | null>(null);
+    const hasPaginationMounted = useRef(false);
+
+    useEffect(() => {
+        window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    }, []);
 
     useEffect(() => {
         setActiveCategory(initialCategory);
         setPage(1);
     }, [initialCategory]);
+
+    useEffect(() => {
+        if (!hasPaginationMounted.current) {
+            hasPaginationMounted.current = true;
+            return;
+        }
+
+        if (!pageHeaderRef.current) {
+            return;
+        }
+
+        const top =
+            pageHeaderRef.current.getBoundingClientRect().top +
+            window.pageYOffset -
+            64;
+
+        window.scrollTo({
+            top: Math.max(top, 0),
+            behavior: 'smooth',
+        });
+    }, [page]);
 
     // Filtered + sorted products
     const filtered = useMemo(() => {
@@ -74,7 +102,7 @@ export default function ItemsClient({
         <div className="min-h-screen bg-cream-100">
 
             {/* ── Page header ── */}
-            <div className="bg-maroon-gradient py-10 text-cream-50">
+            <div ref={pageHeaderRef} className="bg-maroon-gradient py-10 text-cream-50">
                 <div className="section-container">
                     <p className="text-xs font-bold uppercase tracking-widest text-gold-300 mb-2">Our Collection</p>
                     <h1 className="font-display font-bold text-3xl sm:text-4xl mb-1">All Sweets & Mithai</h1>
@@ -129,7 +157,7 @@ export default function ItemsClient({
             </div>
 
             {/* ── Product grid ── */}
-            <div className="section-container py-8">
+            <div ref={productSectionRef} className="section-container py-8">
                 {isPending ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
                         {Array.from({ length: 8 }).map((_, i) => <ProductCardSkeleton key={i} />)}

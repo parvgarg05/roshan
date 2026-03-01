@@ -124,6 +124,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                                         <QuantitySelector
                                             size="sm"
                                             value={item.quantity}
+                                            min={0}
                                             onChange={(v) => updateQuantity(item.id, v)}
                                         />
                                     </div>

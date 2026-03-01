@@ -1,10 +1,9 @@
 import { prisma } from './prisma';
 import { sendCustomerOrderEmail, sendAdminAlertEmail } from './mail';
-import { sendWhatsAppConfirmation } from './twilio';
 
 /**
  * Main fan-out orchestrator for post-purchase notifications.
- * Fetches the full order and dispatches Email + WhatsApp concurrently.
+ * Fetches the full order and dispatches customer/admin emails concurrently.
  * Designed to "fire and forget" so it doesn't block the checkout flow.
  */
 export async function sendOrderConfirmationFanOut(orderId: string) {
@@ -32,11 +31,10 @@ export async function sendOrderConfirmationFanOut(orderId: string) {
         const results = await Promise.allSettled([
             sendCustomerOrderEmail(order, customer, items),
             sendAdminAlertEmail(order, customer),
-            sendWhatsAppConfirmation(order, customer),
         ]);
 
         // 3. Log results
-        const [customerEmail, adminEmail, whatsapp] = results;
+        const [customerEmail, adminEmail] = results;
 
         if (customerEmail.status === 'rejected') {
             console.error('⚠️ [FanOut] Customer Email Failed:', customerEmail.reason);
@@ -44,10 +42,6 @@ export async function sendOrderConfirmationFanOut(orderId: string) {
         if (adminEmail.status === 'rejected') {
             console.error('⚠️ [FanOut] Admin Email Failed:', adminEmail.reason);
         }
-        if (whatsapp.status === 'rejected') {
-            console.error('⚠️ [FanOut] WhatsApp/SMS Failed:', whatsapp.reason);
-        }
-
         console.log('✅ [FanOut] Notification sequence completed.');
     } catch (error) {
         // Catch-all to ensure the caller's thread never crashes

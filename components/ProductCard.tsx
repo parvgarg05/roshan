@@ -67,13 +67,6 @@ export default function ProductCard({ product: initialProduct, className }: Prod
         ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
         : 0;
 
-    const badgeColorMap: Record<string, string> = {
-        saffron: 'bg-saffron-100 text-saffron-700 border border-saffron-200',
-        gold: 'bg-gold-100 text-gold-700 border border-gold-200',
-        maroon: 'bg-maroon-100 text-maroon-700 border border-maroon-200',
-        green: 'bg-green-100 text-green-700 border border-green-200',
-    };
-
     return (
         <article
             className={clsx(
@@ -109,12 +102,6 @@ export default function ProductCard({ product: initialProduct, className }: Prod
                         <span className={clsx('w-2.5 h-2.5 rounded-full', product.isVeg ? 'bg-green-600' : 'bg-red-500')} />
                     </span>
 
-                    {product.badge && product.badgeColor && (
-                        <span className={clsx('px-2 py-0.5 text-[10px] font-bold rounded-lg uppercase tracking-wide', badgeColorMap[product.badgeColor])}>
-                            {product.badge}
-                        </span>
-                    )}
-
                     {discount > 0 && (
                         <span className="px-2 py-0.5 bg-maroon-gradient text-cream-100 text-[10px] font-bold rounded-lg shadow-sm">
                             -{discount}%
@@ -126,10 +113,10 @@ export default function ProductCard({ product: initialProduct, className }: Prod
             {/* ── Content ── */}
             <div className="flex flex-col flex-1 p-4 gap-2">
                 <div className="group/title">
-                    <h3 className="font-display font-semibold text-maroon-900 text-base leading-snug line-clamp-1 group-hover/title:text-saffron-600 transition-colors duration-200">
-                        {product.name}
+                    <h3 className="font-display font-semibold text-maroon-900 text-xl leading-snug line-clamp-1 group-hover/title:text-saffron-600 transition-colors duration-200">
+                        {product.name}{' '}
+                        <span className="font-devanagari text-maroon-600">({product.nameHindi})</span>
                     </h3>
-                    <p className="text-[11px] text-maroon-400 font-devanagari mt-0.5">{product.nameHindi}</p>
                 </div>
 
                 <p className="text-xs text-maroon-500 leading-relaxed line-clamp-2 flex-1">
@@ -212,6 +199,7 @@ export default function ProductCard({ product: initialProduct, className }: Prod
                         <QuantitySelector
                             size="sm"
                             value={qty}
+                            min={0}
                             onChange={(v) => updateQuantity(product.id, v)}
                         />
                     )}
