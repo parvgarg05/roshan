@@ -1,5 +1,6 @@
 import { prisma } from './prisma';
 import type { Product, ProductCategory } from '@/types';
+import { withImageVersion } from './utils';
 
 /**
  * ─── Database-Backed Product Queries ─────────────────────────
@@ -24,7 +25,7 @@ function mapToProductType(dbProduct: any): Product {
         originalPrice: dbProduct.originalPrice || undefined,
         category: dbProduct.categoryId as ProductCategory,
         categoryData: catData as any,
-        image: dbProduct.image,
+        image: withImageVersion(dbProduct.image, dbProduct.updatedAt?.getTime?.() ?? null),
         badge: dbProduct.badge || undefined,
         badgeColor: (dbProduct.badgeColor as any) || undefined,
         rating: dbProduct.rating,

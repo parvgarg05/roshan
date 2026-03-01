@@ -220,16 +220,16 @@ export default function CheckoutForm() {
     }, [items, clearCart, router]);
 
     return (
-        <div className="grid lg:grid-cols-5 gap-6 lg:gap-10">
+        <div className="grid lg:grid-cols-5 gap-5 sm:gap-6 lg:gap-10">
 
             {/* ── Left: Form ── */}
             <form
                 onSubmit={handleSubmit(onSubmit)}
                 noValidate
-                className="lg:col-span-3 space-y-6"
+                className="lg:col-span-3 space-y-5 sm:space-y-6"
             >
                 {/* Personal Details */}
-                <div className="card-base p-5 hover:!-translate-y-0 space-y-4">
+                <div className="card-base p-4 sm:p-5 hover:!-translate-y-0 space-y-4">
                     <h2 className="font-display font-bold text-maroon-900 text-lg flex items-center gap-2">
                         <span className="w-6 h-6 rounded-full bg-saffron-gradient text-white text-xs flex items-center justify-center font-bold">1</span>
                         Personal Details
@@ -268,7 +268,7 @@ export default function CheckoutForm() {
                 </div>
 
                 {/* Delivery Address */}
-                <div className="card-base p-5 hover:!-translate-y-0 space-y-4">
+                <div className="card-base p-4 sm:p-5 hover:!-translate-y-0 space-y-4">
                     <h2 className="font-display font-bold text-maroon-900 text-lg flex items-center gap-2">
                         <span className="w-6 h-6 rounded-full bg-saffron-gradient text-white text-xs flex items-center justify-center font-bold">2</span>
                         Delivery Address
@@ -287,7 +287,7 @@ export default function CheckoutForm() {
                         <FormField label="City" error={errors.city?.message} required>
                             <Input
                                 {...register('city')}
-                                placeholder="e.g. Etah"
+                                placeholder="e.g. Kasganj"
                                 error={errors.city?.message}
                                 autoComplete="address-level2"
                             />
@@ -338,7 +338,7 @@ export default function CheckoutForm() {
                 </Button>
 
                 {/* Trust row */}
-                <div className="flex flex-wrap items-center justify-center gap-4 text-xs text-maroon-400">
+                <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 text-xs text-maroon-400">
                     <span className="flex items-center gap-1"><ShieldCheck size={13} className="text-green-500" /> 100% Secure</span>
                     <span className="flex items-center gap-1"><CreditCard size={13} className="text-saffron-500" /> Razorpay Powered</span>
                     <span className="flex items-center gap-1"><Truck size={13} className="text-maroon-400" /> Same-day Delivery</span>
@@ -347,7 +347,7 @@ export default function CheckoutForm() {
 
             {/* ── Right: Order Summary ── */}
             <aside className="lg:col-span-2">
-                <div className="card-base p-5 hover:!-translate-y-0 lg:sticky lg:top-24">
+                <div className="card-base p-4 sm:p-5 hover:!-translate-y-0 lg:sticky lg:top-24">
                     <h2 className="font-display font-bold text-maroon-900 text-lg mb-4">Order Summary</h2>
 
                     {/* Items */}
@@ -389,7 +389,7 @@ export default function CheckoutForm() {
                         <div className="flex justify-between text-maroon-600">
                             <span>Delivery</span>
                             <span className={delivery === 0 ? 'text-green-600 font-medium' : ''}>
-                                {delivery === 0 ? 'FREE 🎉' : formatCurrency(delivery)}
+                                {delivery === 0 ? 'FREE' : formatCurrency(delivery)}
                             </span>
                         </div>
                         <div className="flex justify-between font-bold text-maroon-900 text-base pt-2 border-t border-cream-200">
@@ -400,7 +400,7 @@ export default function CheckoutForm() {
 
                     {/* Delivery note */}
                     <div className="mt-4 p-3 rounded-xl bg-gold-50 border border-gold-100 text-xs text-maroon-600 space-y-1">
-                        <p className="font-semibold text-gold-700">📦 Delivery Info</p>
+                        <p className="font-semibold text-gold-700">Delivery Info</p>
                         <p>• Free delivery on orders above {formatCurrency(deliveryConfig.freeDeliveryThreshold)}</p>
                         <p>• Same-day delivery for orders before 2 PM</p>
                         <p>• Packed fresh in insulated packaging</p>

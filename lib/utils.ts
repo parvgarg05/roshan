@@ -50,6 +50,33 @@ export function truncate(text: string, max: number): string {
 }
 
 /**
+ * Returns true when URL is explicitly HTTP (not HTTPS).
+ */
+export function isHttpImageUrl(value: string): boolean {
+    return /^http:\/\//i.test(value.trim());
+}
+
+/**
+ * Add/replace a version query param to bust stale image caches.
+ */
+export function withImageVersion(imageUrl: string, version?: string | number | null): string {
+    const cleanUrl = imageUrl.trim();
+    if (!cleanUrl || version === undefined || version === null) {
+        return cleanUrl;
+    }
+
+    const [base, hash = ''] = cleanUrl.split('#');
+    const encodedVersion = encodeURIComponent(String(version));
+
+    const versionPattern = /([?&])v=[^&]*/i;
+    const nextBase = versionPattern.test(base)
+        ? base.replace(versionPattern, `$1v=${encodedVersion}`)
+        : `${base}${base.includes('?') ? '&' : '?'}v=${encodedVersion}`;
+
+    return hash ? `${nextBase}#${hash}` : nextBase;
+}
+
+/**
  * Format a date in India Standard Time.
  */
 export function formatDateTimeIST(

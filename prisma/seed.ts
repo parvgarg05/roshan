@@ -625,7 +625,7 @@ async function main() {
             } as any, // Cast to any to bypass outdated Prisma client types in IDE
         });
     }
-    console.log('✅ Categories seeded.');
+    console.log('Categories seeded.');
 
     console.log('Seeding Products...');
     for (const prod of PRODUCTS) {
@@ -677,7 +677,7 @@ async function main() {
             } as any, // Cast to any to bypass outdated Prisma client types in IDE
         });
     }
-    console.log('✅ Products seeded.');
+    console.log('Products seeded.');
 
     await (prisma as any).deliveryPricing.upsert({
         where: { id: 1 },
@@ -696,14 +696,14 @@ async function main() {
         },
     });
 
-    console.log('✅ Delivery pricing seeded.');
+    console.log('Delivery pricing seeded.');
 
-    console.log('🚀 Seeding finished successfully!');
+    console.log('Seeding finished successfully!');
 }
 
 main()
     .catch((e) => {
-        console.error('❌ Seeding failed:');
+        console.error('Seeding failed:');
         console.error(e);
         process.exit(1);
     })

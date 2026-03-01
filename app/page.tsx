@@ -1,9 +1,8 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRight, Clock, Star, Truck, Award, Phone } from 'lucide-react';
+import { ArrowRight, Phone } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import ProductCard from '@/components/ProductCard';
-import CategoryCarousel from '@/components/CategoryCarousel';
 import HomeImageSlider from '@/components/HomeImageSlider';
 import { getFeaturedProducts, getTodaySpecials, getCategories } from '@/lib/products';
 import { formatCurrency } from '@/lib/utils';
@@ -12,13 +11,6 @@ export default async function HomePage() {
     const todaySpecials = await getTodaySpecials();
     const featuredProducts = await getFeaturedProducts();
     const categories = await getCategories();
-
-    const STATS = [
-        { icon: Award, label: 'Years of Craft', value: '50+' },
-        { icon: Star, label: 'Happy Customers', value: '10K+' },
-        { icon: Truck, label: 'Orders Delivered', value: '50K+' },
-        { icon: Clock, label: 'Fresh Daily', value: '100%' },
-    ];
 
     return (
         <>
@@ -43,21 +35,21 @@ export default async function HomePage() {
                         {/* Left: Text */}
                         <div className="text-cream-50 animate-fade-up">
                             <p className="inline-flex items-center gap-2 px-3 py-1.5 bg-gold-400/20 border border-gold-400/30 text-gold-300 text-xs font-semibold rounded-full uppercase tracking-widest mb-5">
-                                🪔 Authentic Indian Sweets Since Generations
+                                Since 1942 · Kasganj, Uttar Pradesh
                             </p>
 
                             <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight mb-5">
-                                Taste the{' '}
+                                Fresh{' '}
                                 <span className="relative">
-                                    <span className="text-gradient-saffron">Sweetness</span>
+                                    <span className="text-gradient-saffron">Mithai</span>
                                 </span>{' '}
                                 <br className="hidden sm:block" />
-                                of Tradition
+                                Made Daily
                             </h1>
 
                             <p className="text-cream-300 text-base sm:text-lg leading-relaxed mb-8 max-w-lg">
-                                Handcrafted mithai using pure desi ghee and time-honoured family recipes.
-                                Order fresh from our shop at Nadrai Gate, Etah — delivered to your door.
+                                Classic sweets, namkeen, and bakery items prepared with desi ghee and trusted ingredients.
+                                Order directly from our Nadrai Gate shop in Kasganj.
                             </p>
 
                             <div className="flex flex-wrap gap-3 mb-8">
@@ -79,9 +71,8 @@ export default async function HomePage() {
 
                             {/* Trust badges */}
                             <div className="flex flex-wrap gap-3">
-                                {['Pure Desi Ghee', 'No Preservatives', 'Made Fresh Daily'].map((t) => (
-                                    <span key={t} className="inline-flex items-center gap-1.5 px-3 py-1 bg-white/10 border border-white/20 text-cream-200 text-xs rounded-full">
-                                        <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
+                                {['Pure Desi Ghee', 'Freshly Prepared', 'No Artificial Preservatives'].map((t) => (
+                                    <span key={t} className="inline-flex items-center px-3 py-1 bg-white/10 border border-white/20 text-cream-200 text-xs rounded-full">
                                         {t}
                                     </span>
                                 ))}
@@ -96,27 +87,10 @@ export default async function HomePage() {
                 </div>
 
                 {/* Bottom wave */}
-                <div className="absolute bottom-0 left-0 right-0">
-                    <svg viewBox="0 0 1440 60" className="w-full text-cream-100 fill-current" preserveAspectRatio="none">
+                <div className="absolute -bottom-px left-0 right-0 leading-none">
+                    <svg viewBox="0 0 1440 60" className="block w-full text-cream-100 fill-current" preserveAspectRatio="none">
                         <path d="M0,60 C360,0 1080,0 1440,60 L1440,60 L0,60 Z" />
                     </svg>
-                </div>
-            </section>
-
-            {/* ══════════════════════════════════════════════════════
-          STATS BAR
-      ══════════════════════════════════════════════════════ */}
-            <section className="bg-white border-b border-cream-200 py-6">
-                <div className="section-container">
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-0 sm:divide-x sm:divide-cream-200">
-                        {STATS.map(({ icon: Icon, label, value }) => (
-                            <div key={label} className="flex flex-col items-center gap-1 py-2">
-                                <Icon size={20} className="text-saffron-500 mb-1" />
-                                <span className="font-display font-bold text-2xl text-maroon-900">{value}</span>
-                                <span className="text-xs text-maroon-400 text-center">{label}</span>
-                            </div>
-                        ))}
-                    </div>
                 </div>
             </section>
 
@@ -128,13 +102,10 @@ export default async function HomePage() {
                     {/* Heading */}
                     <div className="flex items-end justify-between mb-8 gap-4">
                         <div>
-                            <p className="text-xs font-bold uppercase tracking-widest text-saffron-600 mb-1">
-                                🌅 Limited Quantity
-                            </p>
                             <h2 className="font-display font-bold text-3xl sm:text-4xl text-maroon-900">
                                 Today&apos;s Special
                             </h2>
-                            <p className="text-maroon-500 text-sm mt-1">Freshly made this morning — order before they run out</p>
+                            <p className="text-maroon-500 text-sm mt-1">Today&apos;s fresh picks from our kitchen.</p>
                         </div>
                         <Link
                             href="/items"
@@ -164,10 +135,9 @@ export default async function HomePage() {
                             <h2 className="font-display font-bold text-2xl sm:text-3xl text-maroon-900">Our Sweet Families</h2>
                         </div>
                     </div>
-                    <CategoryCarousel categories={categories} asLinks activeCategory="all" />
 
                     {/* Category feature cards */}
-                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 mt-6">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 mt-4">
                         {categories.filter((c) => c.id !== 'all').slice(0, 8).map((cat) => (
                             <Link
                                 key={cat.id}
@@ -194,9 +164,9 @@ export default async function HomePage() {
                 <div className="section-container">
                     <div className="flex items-end justify-between mb-8 gap-4">
                         <div>
-                            <p className="text-xs font-bold uppercase tracking-widest text-saffron-600 mb-1">⭐ Customer Favourites</p>
+                            <p className="text-xs font-bold uppercase tracking-widest text-saffron-600 mb-1">Customer Favourites</p>
                             <h2 className="font-display font-bold text-3xl sm:text-4xl text-maroon-900">Featured Mithai</h2>
-                            <p className="text-maroon-500 text-sm mt-1">Handpicked bestsellers loved across Uttar Pradesh</p>
+                            <p className="text-maroon-500 text-sm mt-1">Most-ordered sweets from our regular customers.</p>
                         </div>
                         <Link
                             href="/items"
@@ -225,23 +195,25 @@ export default async function HomePage() {
                     <div className="max-w-2xl mx-auto text-center">
                         <p className="text-gold-400 text-xs font-bold uppercase tracking-widest mb-3">Our Promise</p>
                         <h2 className="font-display font-bold text-3xl sm:text-4xl mb-4">
-                            Made with <span className="text-gradient-saffron">Love</span>,<br />
-                            Delivered with <span className="text-gold-300">Care</span>
+                            Traditional Taste,<br />
+                            Fresh Every Day
                         </h2>
-                        <p className="text-cream-300 text-base leading-relaxed mb-7">
-                            Every sweet at L.Roshanlal Ji Sweets is crafted in small batches using traditional recipes.
-                            No artificial colours. No preservatives. Just pure ingredients and decades of expertise.
+                        <p className="text-cream-100 text-lg leading-relaxed mb-7">
+                            We keep things simple: good ingredients, clean preparation, and consistent quality.
+                            That&apos;s the same approach our family has followed for decades.
                         </p>
                         <div className="flex flex-wrap justify-center gap-3">
                             <Link href="/items">
-                                <Button variant="primary" size="lg">Shop Now</Button>
+                                <Button variant="primary" size="lg" className="hover:brightness-110">
+                                    Shop Now
+                                </Button>
                             </Link>
                             <a href="tel:+917055513961">
                                 <Button
                                     variant="outline"
                                     size="lg"
                                     leftIcon={<Phone size={16} />}
-                                    className="border-cream-400/40 text-cream-100 hover:bg-white/10 hover:border-cream-100"
+                                    className="border-saffron-300 text-saffron-300 hover:bg-saffron-500/15 hover:border-saffron-300"
                                 >
                                     Call to Order
                                 </Button>

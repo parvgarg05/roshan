@@ -31,18 +31,18 @@ export default function Footer() {
             <div className="relative h-8 overflow-hidden">
                 <svg
                     viewBox="0 0 1440 32"
-                    className="absolute bottom-0 w-full text-cream-100 fill-current"
+                    className="absolute -bottom-px block w-full text-gold-300/25 fill-current"
                     preserveAspectRatio="none"
                 >
                     <path d="M0,32 C360,0 1080,0 1440,32 L1440,32 L0,32 Z" />
                 </svg>
             </div>
 
-            <div className="section-container py-12 lg:py-16">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
+            <div className="section-container px-6 sm:px-8 lg:px-10 py-10 sm:py-12 lg:py-16">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 sm:gap-12 lg:gap-20">
 
                     {/* ── Column 1: Brand ── */}
-                    <div className="sm:col-span-2 lg:col-span-1 space-y-4">
+                    <div className="sm:col-span-2 lg:col-span-1 space-y-5">
                         {/* Logo mark */}
                         <div className="flex items-center gap-3">
                             <div className="relative w-12 h-12 rounded-2xl overflow-hidden bg-white/10">
@@ -63,9 +63,9 @@ export default function Footer() {
                             </div>
                         </div>
 
-                        <p className="text-cream-300 text-sm leading-relaxed max-w-xs">
-                            Crafting authentic Indian sweets with love and tradition since generations.
-                            Every bite is a celebration of heritage, handmade in the heart of Uttar Pradesh.
+                        <p className="text-cream-200 text-[15px] leading-relaxed max-w-sm">
+                            Traditional mithai, namkeen, and bakery items from our family shop in Kasganj.
+                            Prepared fresh daily with the same trusted taste.
                         </p>
 
                         {/* Social icons */}
@@ -77,79 +77,78 @@ export default function Footer() {
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     aria-label={label}
-                                    className={`w-9 h-9 rounded-xl flex items-center justify-center bg-white/10 text-cream-300 ${color} hover:bg-white/20 transition-all duration-200 touch-target`}
+                                    className={`w-8 h-8 rounded-full flex items-center justify-center border border-white/15 bg-transparent text-cream-300 ${color} hover:bg-white/10 transition-all duration-200 touch-target`}
                                 >
-                                    <Icon size={17} />
+                                    <Icon size={15} />
                                 </a>
                             ))}
                         </div>
                     </div>
 
                     {/* ── Column 2: Quick Links & Contact (Right side, flex layout) ── */}
-                    <div className="lg:col-span-1 flex flex-col sm:flex-row lg:flex-row gap-8 lg:gap-12">
-                    
-                    {/* ── Quick Links ── */}
-                    <div className="space-y-4">
-                        <h3 className="font-display font-semibold text-cream-100 text-base">
-                            Quick Links
-                        </h3>
-                        <ul className="space-y-2.5">
-                            {QUICK_LINKS.map(({ label, href }) => (
-                                <li key={href}>
-                                    <Link
-                                        href={href}
-                                        className="flex items-center gap-2 text-sm text-cream-300 hover:text-gold-400 transition-colors duration-200 group"
-                                    >
-                                        <ArrowRight
-                                            size={13}
-                                            className="text-saffron-400 group-hover:translate-x-1 transition-transform duration-200"
-                                        />
-                                        {label}
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
+                    <div className="lg:col-span-1 grid grid-cols-1 sm:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] gap-8 sm:gap-5 lg:gap-7">
 
-                    {/* ── Column 3: Contact & Hours ── */}
-                    <div className="space-y-4">
-                        <h3 className="font-display font-semibold text-cream-100 text-base">
-                            Visit Us
-                        </h3>
-                        <ul className="space-y-3.5">
-                            <li className="flex items-start gap-3 text-sm text-cream-300">
-                                <MapPin size={16} className="text-gold-400 mt-0.5 shrink-0" />
-                                <address className="not-italic leading-relaxed">
-                                    Circular Road, Malgodam Crossing<br />
-                                    Nadrai Gate, Uttar Pradesh 207123
-                                </address>
-                            </li>
-                            <li className="flex items-center gap-3 text-sm text-cream-300">
-                                <Phone size={16} className="text-gold-400 shrink-0" />
-                                <a href="tel:+917055513961" className="hover:text-gold-400 transition-colors duration-200">
-                                    +91 70555 13961
-                                </a>
-                            </li>
-                            <li className="flex items-center gap-3 text-sm text-cream-300">
-                                <Mail size={16} className="text-gold-400 shrink-0" />
-                                <a href="mailto:info@roshanlaljisweets.com" className="hover:text-gold-400 transition-colors duration-200">
-                                    info@roshanlaljisweets.com
-                                </a>
-                            </li>
-                            <li className="flex items-start gap-3 text-sm text-cream-300">
-                                <Clock size={16} className="text-gold-400 mt-0.5 shrink-0" />
-                                <div className="leading-relaxed">
-                                    <p>Mon – Sat: 8:00 AM – 9:00 PM</p>
-                                    <p>Sunday: 9:00 AM – 8:00 PM</p>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
+                        {/* ── Quick Links ── */}
+                        <div className="space-y-4">
+                            <h3 className="font-display font-semibold text-gold-300 text-sm uppercase tracking-wider">
+                                Quick Links
+                            </h3>
+                            <ul className="space-y-3.5">
+                                {QUICK_LINKS.map(({ label, href }) => (
+                                    <li key={href}>
+                                        <Link
+                                            href={href}
+                                            className="flex items-center gap-2 text-sm text-cream-300 hover:text-gold-400 transition-colors duration-200 group"
+                                        >
+                                            <ArrowRight
+                                                size={13}
+                                                className="text-saffron-400 group-hover:translate-x-1 transition-transform duration-200"
+                                            />
+                                            {label}
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+
+                        {/* ── Column 3: Contact & Hours ── */}
+                        <div className="space-y-4">
+                            <h3 className="font-display font-semibold text-gold-300 text-sm uppercase tracking-wider">
+                                Visit Us
+                            </h3>
+                            <ul className="space-y-4">
+                                <li className="flex items-start gap-3 text-sm text-cream-300">
+                                    <MapPin size={16} className="text-gold-400 mt-0.5 shrink-0" />
+                                    <address className="not-italic leading-relaxed flex-1 min-w-0">
+                                        Circular Road, Malgodam Crossing, Nadrai Gate, Uttar Pradesh 207123
+                                    </address>
+                                </li>
+                                <li className="flex items-center gap-3 text-sm text-cream-300">
+                                    <Phone size={16} className="text-gold-400 shrink-0" />
+                                    <a href="tel:+917055513961" className="hover:text-gold-400 transition-colors duration-200">
+                                        +91 70555 13961
+                                    </a>
+                                </li>
+                                <li className="flex items-center gap-3 text-sm text-cream-300">
+                                    <Mail size={16} className="text-gold-400 shrink-0" />
+                                    <a href="mailto:info@roshanlaljisweets.com" className="hover:text-gold-400 transition-colors duration-200">
+                                        info@roshanlaljisweets.com
+                                    </a>
+                                </li>
+                                <li className="flex items-start gap-3 text-sm text-cream-300">
+                                    <Clock size={16} className="text-gold-400 mt-0.5 shrink-0" />
+                                    <div className="leading-relaxed">
+                                        <p>Mon – Sat: 8:00 AM – 9:00 PM</p>
+                                        <p>Sunday: 9:00 AM – 8:00 PM</p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
 
                 {/* ── Google Maps Embed ── */}
-                <div className="mt-10 rounded-2xl overflow-hidden border border-white/10 shadow-warm-lg relative group">
+                <div className="mt-8 sm:mt-10 rounded-2xl overflow-hidden border border-white/10 shadow-warm-lg relative group">
                     <iframe
                         title="L.Roshanlal Ji Sweets Location"
                         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3532.6851427835!2d78.6533!3d27.8142!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1sRoshanlal%20%26%20Sons%20Kasganj!2sKasganj%2C%20Uttar%20Pradesh!5e0!3m2!1sen!2sin!4v1640000000000"
@@ -160,7 +159,7 @@ export default function Footer() {
                         loading="lazy"
                         referrerPolicy="no-referrer-when-downgrade"
                     />
-                    <a 
+                    <a
                         href="https://www.google.com/maps/search/Roshanlal+Kasganj/@27.8142,78.6533,15z"
                         target="_blank"
                         rel="noopener noreferrer"
@@ -171,12 +170,20 @@ export default function Footer() {
                 </div>
 
                 {/* ── Bottom Bar ── */}
-                <div className="mt-8 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-cream-400">
+                <div className="mt-6 sm:mt-8 pt-5 sm:pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-cream-400">
                     <p>
                         © {currentYear} L.Roshanlal Ji Sweets. All rights reserved.
                     </p>
                     <p className="flex items-center gap-1">
-                        Made with <Heart size={11} className="text-saffron-400 fill-current" /> by Parv
+                        {' '}
+                        <a
+                            href="https://www.linkedin.com/in/parvgarg23" // Replace with your actual LinkedIn URL
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="font-medium hover:text-[#D4AF37] transition-colors underline-offset-4 hover:underline"
+                        >
+                            Designed & Developed by Parv Garg
+                        </a>
                     </p>
                 </div>
             </div>

@@ -61,9 +61,9 @@ export default function OrdersPage() {
 
     return (
         <div className="min-h-screen bg-cream-100">
-            <div className="section-container py-10">
+            <div className="section-container py-8">
                 <h1 className="font-display font-bold text-3xl text-maroon-900 mb-2">My Orders</h1>
-                <p className="text-maroon-500 text-sm mb-6">Enter your phone number and email to view your orders.</p>
+                <p className="text-maroon-500 text-sm mb-6">Enter the phone number and email used during checkout.</p>
 
                 <form onSubmit={onSubmit} className="card-base p-5 mb-6 hover:!-translate-y-0 space-y-4">
                     <Input
@@ -100,7 +100,7 @@ export default function OrdersPage() {
 
                 {hasSearched && orders.length === 0 && !error && (
                     <div className="card-base p-6 text-center hover:!-translate-y-0">
-                        <p className="text-maroon-700 font-medium">No orders found for the entered details.</p>
+                        <p className="text-maroon-700 font-medium">No orders found for these details.</p>
                     </div>
                 )}
 

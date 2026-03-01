@@ -83,11 +83,9 @@ export default function ProductCard({ product: initialProduct, className }: Prod
                     alt={product.name}
                     fill
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    className="object-cover transition-transform duration-500 group-hover:scale-110"
+                    className="object-cover"
                     loading="lazy"
                 />
-                {/* Overlay on hover */}
-                <div className="absolute inset-0 bg-maroon-950/0 group-hover:bg-maroon-950/10 transition-colors duration-300" />
 
                 {/* Badges */}
                 <div className="absolute top-2.5 left-2.5 flex flex-col gap-1.5">

@@ -164,7 +164,6 @@ export default function ItemsClient({
                     </div>
                 ) : paginated.length === 0 ? (
                     <div className="text-center py-20">
-                        <p className="text-5xl mb-4">🍬</p>
                         <h3 className="font-display font-bold text-xl text-maroon-800 mb-2">No sweets found</h3>
                         <p className="text-maroon-400 text-sm mb-6">Try a different search term or category</p>
                         <button

@@ -42,7 +42,7 @@ export async function sendCustomerOrderEmail(
   items: OrderEmailItem[]
 ) {
   if (!isConfigured()) {
-    console.warn('⚠️ [Mail] No SMTP config found. Skipping customer email for order:', order.id);
+    console.warn('[Mail] No SMTP config found. Skipping customer email for order:', order.id);
     return false;
   }
 
@@ -122,10 +122,10 @@ export async function sendCustomerOrderEmail(
       subject: `Order Confirmation - L.Roshanlal Ji Sweets #${order.id.slice(-8).toUpperCase()}`,
       html,
     });
-    console.log('✅ [Mail] Confirmation sent to', customer.email, info.messageId);
+    console.log('[Mail] Confirmation sent to', customer.email, info.messageId);
     return true;
   } catch (error) {
-    console.error('❌ [Mail] Failed to send customer email:', error);
+    console.error('[Mail] Failed to send customer email:', error);
     return false;
   }
 }
@@ -137,7 +137,7 @@ export async function sendAdminAlertEmail(order: Order, customer: { name: string
   if (!isConfigured()) return false;
 
   const html = `
-    <h2>New Order Received! 🚨</h2>
+    <h2>New Order Received!</h2>
     <p><strong>Order ID:</strong> ${order.id}</p>
     <p><strong>Razorpay ID:</strong> ${order.razorpayPaymentId}</p>
     <p><strong>Amount:</strong> ₹${order.totalPaise / 100} (inc. ₹${(order.cgstTotalPaise + order.sgstTotalPaise) / 100} GST)</p>
@@ -152,13 +152,13 @@ export async function sendAdminAlertEmail(order: Order, customer: { name: string
     const info = await transporter.sendMail({
       from: `"L.Roshanlal Ji Sweets" <${FROM_EMAIL}>`,
       to: ADMIN_EMAIL,
-      subject: `🚨 New Order Received - ₹${order.totalPaise / 100}`,
+      subject: `New Order Received - ₹${order.totalPaise / 100}`,
       html,
     });
-    console.log('✅ [Mail] Admin alert sent', info.messageId);
+    console.log('[Mail] Admin alert sent', info.messageId);
     return true;
   } catch (error) {
-    console.error('❌ [Mail] Failed to send admin alert:', error);
+    console.error('[Mail] Failed to send admin alert:', error);
     return false;
   }
 }

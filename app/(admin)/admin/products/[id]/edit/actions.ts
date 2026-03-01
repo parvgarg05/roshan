@@ -4,6 +4,7 @@ import { Prisma } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
 import { prisma } from '@/lib/prisma';
 import { redirect } from 'next/navigation';
+import { isHttpImageUrl } from '@/lib/utils';
 
 export async function updateProduct(id: string, formData: FormData) {
     try {
@@ -22,6 +23,10 @@ export async function updateProduct(id: string, formData: FormData) {
 
         const imageInput = (formData.get('image') as string)?.trim();
         const ingredientsInput = (formData.get('ingredients') as string)?.trim();
+
+        if (imageInput && isHttpImageUrl(imageInput)) {
+            return { error: 'Please use an HTTPS image URL. HTTP images are blocked on secure deployed sites.' };
+        }
 
         await prisma.product.update({
             where: { id },

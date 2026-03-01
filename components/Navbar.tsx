@@ -130,7 +130,7 @@ export default function Navbar() {
 
                             <Link
                                 href="/orders"
-                                className="hidden md:inline-flex items-center gap-1.5 px-4 py-2 bg-saffron-gradient text-white text-sm font-semibold rounded-xl shadow-warm-sm hover:shadow-glow hover:-translate-y-0.5 transition-all duration-200"
+                                className="hidden md:inline-flex items-center gap-1.5 px-4 py-2 border border-saffron-400 text-saffron-700 bg-transparent text-sm font-semibold rounded-xl hover:bg-saffron-50 hover:border-saffron-500 transition-all duration-200"
                             >
                                 My Orders
                             </Link>

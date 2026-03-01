@@ -15,7 +15,7 @@ export default function AboutPage() {
                 <div className="section-container">
                     <h1 className="font-display font-bold text-4xl sm:text-5xl mb-4">About L.Roshan Lal Ji</h1>
                     <p className="text-cream-200 text-lg max-w-2xl">
-                        Crafting authentic Indian sweets with love, tradition, and quality for generations.
+                        A family mithai shop from Kasganj, serving fresh sweets and namkeen since 1942.
                     </p>
                 </div>
             </div>
@@ -26,10 +26,10 @@ export default function AboutPage() {
                     <div>
                         <h2 className="font-display font-bold text-3xl text-maroon-900 mb-6">Our Story Since 1942</h2>
                         <p className="text-maroon-600 text-lg leading-relaxed mb-4">
-                            Welcome to the delightful journey of Roshan Lal Sweets—a legacy that began around <strong>1942</strong> with the visionary <strong>Shri Roshan Lal Ji</strong>! From its humble origins, starting on a small cart, to the grand shop we have today, our story is a testament to the love and dedication of our family.
+                            Roshan Lal Ji Sweets started around <strong>1942</strong> with <strong>Shri Roshan Lal Ji</strong>. What began from a small cart gradually became the shop families know today.
                         </p>
                         <p className="text-maroon-600 text-lg leading-relaxed">
-                            The first generation, led by <strong>Shri Roshan Lal Ji</strong>, set the foundation with uncompromising quality and authentic recipes. The torch was then passed to the second generation, guided by the inspiring <strong>Shri Kailash Chand Ji</strong>, who expanded our legacy and deepened our roots in the community. Today, we continue this cherished tradition, crafting every mithai with the same passion, integrity, and love for our craft that defined our founders.
+                            The first generation built the foundation on quality and honest service. The second generation, led by <strong>Shri Kailash Chand Ji</strong>, expanded the business. Today we continue the same traditional recipes and standards.
                         </p>
                     </div>
                     <div className="relative w-full h-80 rounded-2xl overflow-hidden shadow-warm-lg">
@@ -52,7 +52,7 @@ export default function AboutPage() {
                             { src: '/images/heritage/3_business_1940s.jpg', alt: 'Business operations, 1940s' },
                             { src: '/images/heritage/4_storefront_growing.jpg', alt: 'Growing storefront' },
                         ].map((img, i) => (
-                            <div key={i} className="relative w-full h-48 rounded-xl overflow-hidden shadow-warm-sm hover:shadow-warm-lg transition-shadow duration-200">
+                            <div key={i} className="relative w-full h-48 rounded-xl overflow-hidden shadow-warm-sm">
                                 <Image
                                     src={img.src}
                                     alt={img.alt}

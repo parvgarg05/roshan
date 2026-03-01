@@ -41,7 +41,7 @@ export default function CartPage() {
                 </div>
             </div>
 
-            <div className="section-container py-8">
+            <div className="section-container py-6 sm:py-8">
                 <div className="grid lg:grid-cols-3 gap-6 lg:gap-8 items-start">
 
                     {/* ── Cart Items ── */}
@@ -144,7 +144,7 @@ export default function CartPage() {
                                 <div className="flex justify-between text-maroon-600">
                                     <span>Delivery</span>
                                     <span className={delivery === 0 ? 'text-green-600 font-medium' : ''}>
-                                        {delivery === 0 ? 'FREE 🎉' : formatCurrency(delivery)}
+                                        {delivery === 0 ? 'FREE' : formatCurrency(delivery)}
                                     </span>
                                 </div>
                                 <div className="flex justify-between font-bold text-maroon-900 text-lg pt-2 border-t border-cream-200">
@@ -160,14 +160,14 @@ export default function CartPage() {
                                     </Button>
                                 </Link>
                                 <p className="text-[11px] text-center text-maroon-400">
-                                    🔒 Secured with Razorpay · Free cancellation within 30 min
+                                    Secured with Razorpay · Free cancellation within 30 min
                                 </p>
                             </div>
                         </div>
 
                         {/* Delivery info card */}
                         <div className="card-base p-4 mt-3 hover:!-translate-y-0">
-                            <p className="text-xs font-semibold text-maroon-700 mb-2">📦 Delivery Information</p>
+                            <p className="text-xs font-semibold text-maroon-700 mb-2">Delivery Information</p>
                             <ul className="text-xs text-maroon-500 space-y-1 leading-relaxed">
                                 <li>• Free delivery on orders above {formatCurrency(deliveryConfig.freeDeliveryThreshold)}</li>
                                 <li>• Same-day delivery for orders before 2 PM</li>

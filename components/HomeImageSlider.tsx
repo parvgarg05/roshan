@@ -53,7 +53,9 @@ export default function HomeImageSlider() {
                 </div>
             ))}
 
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2">
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/45 to-transparent" />
+
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 drop-shadow-md">
                 {SLIDES.map((slide, index) => (
                     <span
                         key={`${slide.src}-dot`}

@@ -4,7 +4,7 @@ import { CheckCircle2, Clock, Phone, ArrowRight, ShoppingBag } from 'lucide-reac
 import Button from '@/components/ui/Button';
 
 export const metadata: Metadata = {
-    title: 'Order Confirmed! 🎉',
+    title: 'Order Confirmed!',
     robots: { index: false, follow: false },
 };
 
@@ -45,11 +45,10 @@ export default async function SuccessPage({ searchParams }: SuccessPageProps) {
                     </div>
 
                     <h1 className="font-display font-bold text-3xl text-maroon-900 mb-2">
-                        Order Confirmed! 🎉
+                        Order Confirmed!
                     </h1>
                     <p className="text-maroon-500 text-sm leading-relaxed mb-5">
-                        Thank you for your order! We&apos;re already preparing your fresh mithai.
-                        Brace yourself for some serious sweetness. 🍬
+                        Thanks for ordering with us. Your order is received and our team has started preparing it.
                     </p>
 
                     {/* Order ID chip */}

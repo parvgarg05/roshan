@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import Image from 'next/image';
-import { formatCurrency } from '@/lib/utils';
+import { formatCurrency, withImageVersion } from '@/lib/utils';
 import ProductToggle from './ProductToggle';
 import { Pencil, Plus } from 'lucide-react';
 import Link from 'next/link';
@@ -50,7 +50,7 @@ export default async function AdminProductsPage() {
                                 <td className="px-5 py-3">
                                     <div className="relative w-12 h-12 rounded-lg overflow-hidden border border-cream-200">
                                         <Image
-                                            src={product.image}
+                                            src={withImageVersion(product.image, product.updatedAt.getTime())}
                                             alt={product.name}
                                             fill
                                             className="object-cover"

@@ -164,7 +164,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                                 <div className="flex justify-between text-maroon-600">
                                     <span>Delivery</span>
                                     <span className={delivery === 0 ? 'text-green-600 font-medium' : ''}>
-                                        {delivery === 0 ? 'FREE 🎉' : formatCurrency(delivery)}
+                                        {delivery === 0 ? 'FREE' : formatCurrency(delivery)}
                                     </span>
                                 </div>
                                 <div className="flex justify-between font-bold text-maroon-900 text-base pt-2 border-t border-cream-200">

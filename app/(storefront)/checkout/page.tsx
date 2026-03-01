@@ -15,7 +15,7 @@ export default async function CheckoutPage() {
     return (
         <div className="min-h-screen bg-cream-100">
             {/* Header */}
-            <div className="bg-maroon-gradient py-8 text-cream-50">
+            <div className="bg-maroon-gradient py-6 sm:py-8 text-cream-50">
                 <div className="section-container">
                     <p className="text-xs font-bold uppercase tracking-widest text-gold-300 mb-1">Secure Checkout</p>
                     <h1 className="font-display font-bold text-3xl flex items-center gap-3">
@@ -23,7 +23,7 @@ export default async function CheckoutPage() {
                         Complete Your Order
                     </h1>
                     <p className="text-cream-300 text-sm mt-1">
-                        🔒 Your payment is secured by Razorpay — India&apos;s most trusted payment gateway
+                        Your payment is secured by Razorpay — India&apos;s most trusted payment gateway
                     </p>
                     <p className="text-cream-200 text-xs mt-2">
                         Order timing: {formatOrderWindowIST(orderTiming)}
@@ -32,7 +32,7 @@ export default async function CheckoutPage() {
             </div>
 
             {/* Form */}
-            <div className="section-container py-8">
+            <div className="section-container py-6 sm:py-8">
                 <CheckoutForm />
             </div>
         </div>
