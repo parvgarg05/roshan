@@ -1,0 +1,195 @@
+.
++-- app/
+|   +-- (admin)/
+|   |   \-- admin/
+|   |       +-- categories/
+|   |       |   \-- page.tsx
+|   |       +-- login/
+|   |       |   +-- AdminLoginForm.tsx
+|   |       |   \-- page.tsx
+|   |       +-- orders/
+|   |       |   +-- actions.ts
+|   |       |   +-- page.tsx
+|   |       |   +-- PastOrdersDateFilter.tsx
+|   |       |   \-- StatusSelect.tsx
+|   |       +-- pricing/
+|   |       |   +-- actions.ts
+|   |       |   +-- page.tsx
+|   |       |   \-- PricingForm.tsx
+|   |       +-- products/
+|   |       |   +-- [id]/
+|   |       |   |   \-- edit/
+|   |       |   |       +-- actions.ts
+|   |       |   |       +-- EditProductForm.tsx
+|   |       |   |       \-- page.tsx
+|   |       |   +-- new/
+|   |       |   |   +-- actions.ts
+|   |       |   |   \-- page.tsx
+|   |       |   +-- actions.ts
+|   |       |   +-- DeleteProductButton.tsx
+|   |       |   +-- page.tsx
+|   |       |   \-- ProductToggle.tsx
+|   |       +-- timing/
+|   |       |   +-- actions.ts
+|   |       |   +-- page.tsx
+|   |       |   \-- TimingForm.tsx
+|   |       +-- layout.tsx
+|   |       +-- LogoutButton.tsx
+|   |       \-- page.tsx
+|   +-- (storefront)/
+|   |   +-- about/
+|   |   |   \-- page.tsx
+|   |   +-- auth/
+|   |   |   \-- phone/
+|   |   +-- cart/
+|   |   |   \-- page.tsx
+|   |   +-- checkout/
+|   |   |   \-- page.tsx
+|   |   +-- contact/
+|   |   |   \-- page.tsx
+|   |   +-- items/
+|   |   |   +-- ItemsClient.tsx
+|   |   |   \-- page.tsx
+|   |   +-- orders/
+|   |   |   \-- page.tsx
+|   |   +-- success/
+|   |   |   \-- page.tsx
+|   |   \-- layout.tsx
+|   +-- api/
+|   |   +-- admin/
+|   |   |   \-- categories/
+|   |   |       \-- route.ts
+|   |   +-- auth/
+|   |   |   +-- customer/
+|   |   |   |   +-- request-otp/
+|   |   |   |   +-- session/
+|   |   |   |   \-- verify-otp/
+|   |   |   +-- login/
+|   |   |   |   \-- route.ts
+|   |   |   \-- logout/
+|   |   |       \-- route.ts
+|   |   +-- checkout/
+|   |   |   +-- cancel-order/
+|   |   |   |   \-- route.ts
+|   |   |   +-- create-order/
+|   |   |   |   \-- route.ts
+|   |   |   \-- verify/
+|   |   |       \-- route.ts
+|   |   +-- config/
+|   |   |   \-- delivery/
+|   |   |       \-- route.ts
+|   |   +-- orders/
+|   |   |   \-- track/
+|   |   |       \-- route.ts
+|   |   \-- products/
+|   |       \-- [id]/
+|   |           \-- rate/
+|   |               \-- route.ts
+|   +-- globals.css
+|   +-- layout.tsx
+|   \-- page.tsx
++-- components/
+|   +-- checkout/
+|   |   \-- CheckoutForm.tsx
+|   +-- ui/
+|   |   +-- Badge.tsx
+|   |   +-- Button.tsx
+|   |   +-- Card.tsx
+|   |   +-- Input.tsx
+|   |   +-- QuantitySelector.tsx
+|   |   \-- Skeleton.tsx
+|   +-- CartDrawer.tsx
+|   +-- CartToast.tsx
+|   +-- CategoryCarousel.tsx
+|   +-- Footer.tsx
+|   +-- HomeImageSlider.tsx
+|   +-- Navbar.tsx
+|   +-- ProductCard.tsx
+|   \-- SiteChrome.tsx
++-- context/
+|   \-- CartContext.tsx
++-- lib/
+|   +-- validations/
+|   |   +-- checkout.ts
+|   |   +-- order-tracking.ts
+|   |   \-- payment.ts
+|   +-- admin-auth.ts
+|   +-- auth.ts
+|   +-- delivery.ts
+|   +-- mail.ts
+|   +-- notifications.ts
+|   +-- orderTiming.ts
+|   +-- prisma.ts
+|   +-- products.ts
+|   +-- razorpay.ts
+|   \-- utils.ts
++-- prisma/
+|   +-- migrations/
+|   |   +-- 20260223050417_constraint_removal/
+|   |   |   \-- migration.sql
+|   |   +-- 20260223120000_add_order_timing/
+|   |   |   \-- migration.sql
+|   |   +-- 20260301133509_remove_customer_otp/
+|   |   |   \-- migration.sql
+|   |   \-- migration_lock.toml
+|   +-- schema.prisma
+|   \-- seed.ts
++-- public/
+|   +-- images/
+|   |   +-- heritage/
+|   |   |   +-- 1_shop_early_1940s.jpg
+|   |   |   +-- 2_family_working_1940s.jpg
+|   |   |   +-- 3_business_1940s.jpg
+|   |   |   \-- 4_storefront_growing.jpg
+|   |   \-- products/
+|   |       +-- atta-biscuits.jpg
+|   |       +-- besan-ladoo.png
+|   |       +-- boondi-ladoo.png
+|   |       +-- doodh-peda.png
+|   |       +-- gajar-halwa.png
+|   |       +-- gulab-jamun.png
+|   |       +-- jalebi.png
+|   |       +-- kaju-katli.png
+|   |       +-- kaju-roll.png
+|   |       +-- milk-cake.png
+|   |       +-- moong-dal-halwa.png
+|   |       +-- motichoor-ladoo.png
+|   |       +-- namak-para.png
+|   |       +-- pinni.png
+|   |       +-- rasgulla.png
+|   |       +-- rasmalai.png
+|   |       \-- soan-papdi.png
+|   +-- apple-touch-icon.png
+|   +-- logo.png
+|   +-- logo-128.png
+|   +-- logo-32.png
+|   +-- logo4.png
+|   +-- logo4-128.png
+|   +-- logo4-32.png
+|   +-- logo4-64.png
+|   +-- logo-64.png
+|   \-- main.jpg
++-- scripts/
++-- types/
+|   \-- index.ts
++-- .env
++-- .env.example
++-- .env.local
++-- .gitignore
++-- dev-server.log
++-- eslint.config.mjs
++-- middleware.ts
++-- next.config.ts
++-- next-env.d.ts
++-- package.json
++-- package-lock.json
++-- postcss.config.js
++-- project-structure-full.txt
++-- project-structure-source.txt
++-- tailwind.config.ts
++-- test-db.js
++-- test-order.js
++-- test-prisma-types.js
++-- test-prisma-types-2.js
++-- tsconfig.json
+\-- tsconfig.tsbuildinfo
