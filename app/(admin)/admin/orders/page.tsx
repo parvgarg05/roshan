@@ -1,9 +1,10 @@
-import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
 import { formatCurrency, formatDateTimeIST } from '@/lib/utils';
 import { OrderStatus } from '@prisma/client';
+import Link from 'next/link';
 import StatusSelect from './StatusSelect';
 import PastOrdersDateFilter from './PastOrdersDateFilter';
+import RefreshOrdersButton from './RefreshOrdersButton';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -24,24 +25,15 @@ const ADMIN_ORDER_TABS = [
 type AdminOrderTab = (typeof ADMIN_ORDER_TABS)[number]['key'];
 
 function getStatusFilterForTab(tab: AdminOrderTab): OrderStatus[] {
-    if (tab === 'processing') {
-        return [OrderStatus.PROCESSING];
-    }
-
-    if (tab === 'pending-payment') {
-        return [OrderStatus.PENDING, OrderStatus.FAILED];
-    }
-
-    if (tab === 'delivered') {
-        return [OrderStatus.DELIVERED];
-    }
+    if (tab === 'processing') return [OrderStatus.PROCESSING];
+    if (tab === 'pending-payment') return [OrderStatus.PENDING];
+    if (tab === 'delivered') return [OrderStatus.DELIVERED];
 
     return [
         OrderStatus.PENDING,
         OrderStatus.PAID,
         OrderStatus.PROCESSING,
         OrderStatus.DELIVERED,
-        OrderStatus.FAILED,
         OrderStatus.REFUNDED,
     ];
 }
@@ -51,8 +43,19 @@ function getIstDayRange(referenceDate: Date) {
     const utcMs = referenceDate.getTime() + referenceDate.getTimezoneOffset() * 60_000;
     const istDate = new Date(utcMs + IST_OFFSET_MINUTES * 60_000);
 
-    const istStart = new Date(Date.UTC(istDate.getUTCFullYear(), istDate.getUTCMonth(), istDate.getUTCDate(), 0, 0, 0, 0));
-    const istEnd = new Date(Date.UTC(istDate.getUTCFullYear(), istDate.getUTCMonth(), istDate.getUTCDate(), 23, 59, 59, 999));
+    const istStart = new Date(Date.UTC(
+        istDate.getUTCFullYear(),
+        istDate.getUTCMonth(),
+        istDate.getUTCDate(),
+        0, 0, 0, 0
+    ));
+
+    const istEnd = new Date(Date.UTC(
+        istDate.getUTCFullYear(),
+        istDate.getUTCMonth(),
+        istDate.getUTCDate(),
+        23, 59, 59, 999
+    ));
 
     return {
         startUtc: new Date(istStart.getTime() - IST_OFFSET_MINUTES * 60_000),
@@ -85,34 +88,58 @@ function getIstDateInputString(referenceDate: Date) {
     return `${year}-${month}-${day}`;
 }
 
+function buildOrdersTabHref(tab: AdminOrderTab, selectedDateInput?: string) {
+    const params = new URLSearchParams();
+    params.set('tab', tab);
+
+    if (tab === 'past' && selectedDateInput) {
+        params.set('date', selectedDateInput);
+    }
+
+    return `/admin/orders?${params.toString()}`;
+}
+
 export default async function OrdersPage({ searchParams }: OrdersPageProps) {
     const resolvedSearchParams = await searchParams;
-    const requestedTab = Array.isArray(resolvedSearchParams.tab) ? resolvedSearchParams.tab[0] : resolvedSearchParams.tab;
-    const selectedDateInput = Array.isArray(resolvedSearchParams.date) ? resolvedSearchParams.date[0] : resolvedSearchParams.date;
-    const activeTab: AdminOrderTab = ADMIN_ORDER_TABS.some((tab) => tab.key === requestedTab)
+    const requestedTab = Array.isArray(resolvedSearchParams.tab)
+        ? resolvedSearchParams.tab[0]
+        : resolvedSearchParams.tab;
+
+    const selectedDateInput = Array.isArray(resolvedSearchParams.date)
+        ? resolvedSearchParams.date[0]
+        : resolvedSearchParams.date;
+
+    const activeTab: AdminOrderTab = ADMIN_ORDER_TABS.some(
+        (tab) => tab.key === requestedTab
+    )
         ? (requestedTab as AdminOrderTab)
         : 'all';
 
     const statusFilter = getStatusFilterForTab(activeTab);
     const { startUtc, endUtc } = getIstDayRange(new Date());
-    const todayIstInput = getIstDateInputString(new Date());
     const parsedSelectedDate = parseIstDateInputToUtcRange(selectedDateInput);
+    const currentIstDateInput = getIstDateInputString(new Date());
 
-    const createdAtFilter: { gte?: Date; lte?: Date; lt?: Date } | undefined =
+    const pastDateValue = activeTab === 'past'
+        ? (selectedDateInput && parseIstDateInputToUtcRange(selectedDateInput)
+            ? selectedDateInput
+            : currentIstDateInput)
+        : currentIstDateInput;
+
+    const createdAtFilter:
+        | { gte?: Date; lte?: Date; lt?: Date }
+        | undefined =
         activeTab === 'today'
             ? { gte: startUtc, lte: endUtc }
             : activeTab === 'past'
-                ? parsedSelectedDate
-                    ? { gte: parsedSelectedDate.startUtc, lte: parsedSelectedDate.endUtc }
-                    : { lt: startUtc }
-                : undefined;
+            ? parsedSelectedDate
+                ? { gte: parsedSelectedDate.startUtc, lte: parsedSelectedDate.endUtc }
+                : { lt: startUtc }
+            : undefined;
 
-    // Fetch filtered orders with customer and items
     const orders = await prisma.order.findMany({
         where: {
-            status: {
-                in: statusFilter,
-            },
+            status: { in: statusFilter },
             ...(createdAtFilter ? { createdAt: createdAtFilter } : {}),
         },
         orderBy: { createdAt: 'desc' },
@@ -124,28 +151,27 @@ export default async function OrdersPage({ searchParams }: OrdersPageProps) {
 
     return (
         <div className="p-6 md:p-10 max-w-7xl mx-auto space-y-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div>
-                    <h1 className="font-display font-bold text-3xl text-maroon-900">Orders</h1>
-                    <p className="text-maroon-500 mt-1">Manage all incoming orders and update their fulfillment status.</p>
-                </div>
+            <div className="flex flex-wrap items-center justify-between gap-3">
+                <h1 className="font-display font-bold text-3xl text-maroon-900">
+                    Orders
+                </h1>
+                <RefreshOrdersButton />
             </div>
 
             <div className="flex flex-wrap gap-2">
                 {ADMIN_ORDER_TABS.map((tab) => {
-                    const isActive = activeTab === tab.key;
+                    const isActive = tab.key === activeTab;
 
                     return (
                         <Link
                             key={tab.key}
-                            href={`/admin/orders?tab=${tab.key}`}
-                            className={`px-3 py-1.5 rounded-full text-sm font-semibold border transition-colors ${
-                                isActive
-                                    ? 'bg-saffron-100 text-saffron-700 border-saffron-300'
-                                    : 'bg-white text-maroon-600 border-cream-200 hover:bg-cream-50'
-                            }`}
+                            href={buildOrdersTabHref(tab.key, selectedDateInput)}
+                            className={`h-10 px-4 rounded-xl border text-sm font-semibold transition-colors ${isActive
+                                ? 'bg-maroon-900 text-white border-maroon-900'
+                                : 'bg-white text-maroon-700 border-cream-200 hover:bg-cream-100'
+                                }`}
                         >
-                            {tab.label}
+                            <span className="inline-flex h-full items-center">{tab.label}</span>
                         </Link>
                     );
                 })}
@@ -153,31 +179,31 @@ export default async function OrdersPage({ searchParams }: OrdersPageProps) {
 
             {activeTab === 'past' && (
                 <PastOrdersDateFilter
-                    selectedDate={parsedSelectedDate ? selectedDateInput ?? '' : ''}
-                    maxDate={todayIstInput}
+                    selectedDate={pastDateValue}
+                    maxDate={currentIstDateInput}
                 />
             )}
 
-            {/* Orders Table */}
-            <div className="bg-white rounded-2xl border border-cream-200 shadow-warm-sm overflow-hidden auto-cols-auto overflow-x-auto">
+            <div className="bg-white rounded-2xl border border-cream-200 shadow-warm-sm overflow-x-auto">
                 {orders.length === 0 ? (
                     <div className="p-12 text-center text-maroon-400">
-                        <p>No orders found for this category.</p>
+                        No orders found.
                     </div>
                 ) : (
-                    <table className="w-full text-left text-[15px] whitespace-nowrap">
-                        <thead className="bg-cream-50 text-maroon-500 font-semibold border-b border-cream-200">
+                    <table className="w-full text-left text-[15px]">
+                        <thead className="bg-cream-100 text-maroon-500 font-semibold border-b border-cream-200">
                             <tr>
                                 <th className="px-5 py-4">Order Details</th>
-                                <th className="px-5 py-4">Customer</th>
-                                <th className="px-5 py-4">Address</th>
+                                <th className="px-5 py-4 min-w-[260px]">Customer</th>
+                                <th className="px-5 py-4 min-w-[280px]">Address</th>
                                 <th className="px-5 py-4 text-right">Total</th>
                                 <th className="px-5 py-4 text-center">Status</th>
                             </tr>
                         </thead>
+
                         <tbody className="divide-y divide-cream-100">
                             {orders.map((order) => (
-                                <tr key={order.id} className="hover:bg-cream-50/50 transition-colors">
+                                <tr key={order.id}>
                                     {/* Order Details */}
                                     <td className="px-5 py-4 align-top">
                                         <div className="font-mono text-sm text-maroon-400 mb-1">
@@ -186,44 +212,46 @@ export default async function OrdersPage({ searchParams }: OrdersPageProps) {
                                         <div className="text-maroon-900 font-medium mb-2">
                                             {formatDateTimeIST(order.createdAt)}
                                         </div>
-                                        <ul className="text-sm text-maroon-600 space-y-1 max-w-[200px] truncate">
-                                            {order.items.map(item => (
-                                                <li key={item.id} className="truncate">
-                                                    {item.quantity}x {item.name}
-                                                </li>
-                                            ))}
-                                        </ul>
                                     </td>
 
                                     {/* Customer */}
-                                    <td className="px-5 py-4 align-top">
-                                        <div className="text-maroon-900 font-medium">{order.customer.name}</div>
-                                        <div className="text-maroon-500 text-sm mt-0.5">{order.customer.phone}</div>
-                                        <div className="text-maroon-500 text-sm truncate max-w-[150px]">{order.customer.email}</div>
-                                    </td>
-
-                                    {/* Address */}
-                                    <td className="px-5 py-4 align-top max-w-[200px]">
-                                        <div className="text-maroon-700 text-sm whitespace-normal line-clamp-2 leading-relaxed">
-                                            {order.addressLine}, {order.city}, {order.state} {order.pincode}
-                                        </div>
-                                    </td>
-
-                                    {/* Total */}
-                                    <td className="px-5 py-4 align-top text-right">
-                                        <div className="text-maroon-900 font-bold">
-                                            {formatCurrency(order.totalPaise / 100)}
-                                        </div>
-                                        {order.razorpayPaymentId && (
-                                            <div className="text-[10px] bg-green-100 text-green-700 px-1.5 py-0.5 rounded uppercase font-semibold inline-block mt-1">
-                                                Paid online
+                                    <td className="px-5 py-4 align-top min-w-[260px]">
+                                        {order.customer ? (
+                                            <>
+                                                <div className="text-maroon-900 font-medium">
+                                                    {order.customer.name}
+                                                </div>
+                                                <div className="text-maroon-500 text-sm mt-0.5">
+                                                    {order.customer.phone}
+                                                </div>
+                                                <div className="text-maroon-500 text-sm mt-0.5 whitespace-normal break-all max-w-[280px] leading-snug">
+                                                    {order.customer.email}
+                                                </div>
+                                            </>
+                                        ) : (
+                                            <div className="text-gray-400 italic">
+                                                Guest Order
                                             </div>
                                         )}
                                     </td>
 
-                                    {/* Status Column */}
+                                    {/* Address */}
+                                    <td className="px-5 py-4 align-top whitespace-normal min-w-[280px] max-w-[360px] leading-snug">
+                                        {order.addressLine}, {order.city},{' '}
+                                        {order.state} {order.pincode}
+                                    </td>
+
+                                    {/* Total */}
+                                    <td className="px-5 py-4 align-top text-right font-bold">
+                                        {formatCurrency(order.totalPaise / 100)}
+                                    </td>
+
+                                    {/* Status */}
                                     <td className="px-5 py-4 align-top text-center">
-                                        <StatusSelect orderId={order.id} currentStatus={order.status} />
+                                        <StatusSelect
+                                            orderId={order.id}
+                                            currentStatus={order.status}
+                                        />
                                     </td>
                                 </tr>
                             ))}
